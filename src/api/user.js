@@ -15,9 +15,9 @@ export function getInfo(token) {
     params: { token }
   })
 }
-export function getUserMenu(token) {
+export function getUserFunc(token) {
   return request({
-    url: '/sys/user/info',
+    url: '/sys/func/getUserFunc',
     method: 'get',
     params: { token }
   })

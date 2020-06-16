@@ -6,8 +6,9 @@ Vue.use(Router)
 
 import Layout from '@/layout'
 import NProgress from "nprogress";
-
-
+import store from "@/store";
+import http from '@/utils/request'
+import { isURL } from '@/utils/validate'
 
 // 全局路由
 const globalRoutes = [
@@ -31,28 +32,6 @@ const globalRoutes = [
   }
 ]
 
-
-const menuRoutes = {
-  path: '',
-  component: Layout,
-  name: 'sysMgr',
-  meta: { title: '系统管理', icon: 'example'},
-  children: [
-    {
-      path: 'table',
-      name: 'Table',
-      component: () => import('@/views/table/index'),
-      meta: { title: 'Table', icon: 'table' }
-    },
-    {
-      path: 'tree',
-      name: 'Tree',
-      component: () => import('@/views/tree/index'),
-      meta: { title: 'Tree', icon: 'tree' }
-    }
-  ]
-}
-
 const router = new Router({
   scrollBehavior: () => ({ y: 0 }),
   isInitMenuRoute: false, // 是否初始化菜单
@@ -66,10 +45,29 @@ router.beforeEach((to, from, next) => {
   if (router.options.isInitMenuRoute || fnCurrentRouteType(to, globalRoutes) === 'global') {
     next()
   } else {
-    globalRoutes.push(menuRoutes)
-    router.addRoutes(globalRoutes)
-    router.options.isInitMenuRoute = true
-    next({ ...to, replace: true })
+    const token = getToken()
+    if (!token || !/\S/.test(token)) {
+      next({ name: 'login' })
+    } else {
+      http({
+        url: '/sys/func/getUserFunc',
+        method: 'get',
+        params: {token}
+      }).then(({data}) => {
+        if (data && data.retCode === '0000') {
+          for (let i = 0; i < data.userFuncs.length; i++ ){
+            data.userFuncs[i].path = ''
+            data.userFuncs[i].component = Layout
+            globalRoutes.push(data.userFuncs[i])
+          }
+          router.addRoutes(globalRoutes)
+          router.options.isInitMenuRoute = true
+          next({ ...to, replace: true })
+        } else {
+          next()
+        }
+      })
+    }
   }
   NProgress.done()
 })
@@ -78,7 +76,7 @@ router.beforeEach((to, from, next) => {
  * 判断当前路由类型, global: 全局路由, main: 主入口路由
  * @param {*} route 当前路由
  */
-function fnCurrentRouteType (route, globalRoutes = []) {
+function fnCurrentRouteType(route, globalRoutes = []) {
   var temp = []
   for (var i = 0; i < globalRoutes.length; i++) {
     if (route.path === globalRoutes[i].path) {

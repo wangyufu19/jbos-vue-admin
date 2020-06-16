@@ -1,4 +1,4 @@
-import { login, logout, getInfo, getUserMenu } from '@/api/user'
+import { login, logout, getInfo, getUserFunc } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -48,15 +48,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
-
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        commit('SET_NAME', data.user.username)
+        // commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -64,9 +60,9 @@ const actions = {
     })
   },
   // user menu
-  getUserMenu({ commit, state }) {
+  getUserFunc({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getUserMenu(state.token).then(response => {
+      getUserFunc(state.token).then(response => {
         resolve()
       }).catch(error => {
         reject(error)
