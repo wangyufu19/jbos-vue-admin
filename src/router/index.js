@@ -5,8 +5,8 @@ import { getToken } from '@/utils/auth' // get token from cookie
 Vue.use(Router)
 
 import Layout from '@/layout'
-import NProgress from "nprogress";
-import store from "@/store";
+import NProgress from 'nprogress'
+import store from '@/store'
 import http from '@/utils/request'
 import { isURL } from '@/utils/validate'
 
@@ -52,13 +52,12 @@ router.beforeEach((to, from, next) => {
       http({
         url: '/sys/func/getUserFunc',
         method: 'get',
-        params: {token}
-      }).then(({data}) => {
+        params: { token }
+      }).then(({ data }) => {
         if (data && data.retCode === '0000') {
-          for (let i = 0; i < data.userFuncs.length; i++ ){
-            data.userFuncs[i].path = ''
-            data.userFuncs[i].component = Layout
-            globalRoutes.push(data.userFuncs[i])
+          const funcRoutes = fnAddDynamicMenuRoutes(data.userFuncs)
+          for (let i = 0; i < funcRoutes.length; i++) {
+            globalRoutes.push(funcRoutes[i])
           }
           router.addRoutes(globalRoutes)
           router.options.isInitMenuRoute = true
@@ -87,7 +86,38 @@ function fnCurrentRouteType(route, globalRoutes = []) {
   }
   return temp.length >= 1 ? fnCurrentRouteType(route, temp) : 'main'
 }
-
+/**
+ * 添加动态(菜单)路由
+ * @param {*} menuList 菜单列表
+ * @param {*} routes 递归创建的动态(菜单)路由
+ */
+function fnAddDynamicMenuRoutes(menuList = []) {
+  const funcRoutes = []
+  for (let i = 0; i < menuList.length; i++) {
+    const funcRoute = fnAddDynamicMenuRoute(menuList[i])
+    if (menuList[i].funcList && menuList[i].funcList.length >= 1) {
+      funcRoute.children = fnAddDynamicMenuRoutes(menuList[i].funcList)
+      funcRoute['component'] = Layout
+    } else {
+      funcRoute['path'] = menuList[i].funcPath
+      funcRoute['component'] = () => import('@/views/404')
+    }
+    funcRoutes.push(funcRoute)
+  }
+  return funcRoutes
+}
+function fnAddDynamicMenuRoute(func) {
+  const route = {
+    path: '',
+    name: func.funcCode,
+    meta: {
+      menuId: func.id,
+      title: func.funcName,
+      icon: 'dashboard'
+    }
+  }
+  return route
+}
 export function resetRouter() {
   const newRouter = router
   router.matcher = newRouter.matcher // reset router
