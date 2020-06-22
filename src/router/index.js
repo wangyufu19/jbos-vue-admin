@@ -4,11 +4,18 @@ import { getToken } from '@/utils/auth' // get token from cookie
 
 Vue.use(Router)
 
+
+
 import Layout from '@/layout'
 import NProgress from 'nprogress'
 import store from '@/store'
 import http from '@/utils/request'
 import { isURL } from '@/utils/validate'
+
+
+const loadView = (view) => { // 路由懒加载
+  return resolve => require([`@/views/${view}`], resolve)
+}
 
 // 全局路由
 const globalRoutes = [
@@ -97,10 +104,10 @@ function fnAddDynamicMenuRoutes(menuList = []) {
     const funcRoute = fnAddDynamicMenuRoute(menuList[i])
     if (menuList[i].funcList && menuList[i].funcList.length >= 1) {
       funcRoute.children = fnAddDynamicMenuRoutes(menuList[i].funcList)
-      funcRoute['component'] = Layout
+      funcRoute.component = Layout
     } else {
-      funcRoute['path'] = menuList[i].funcPath
-      funcRoute['component'] = () => import('@/views/404')
+      funcRoute.path = menuList[i].funcPath
+      funcRoute.component = loadView(menuList[i].funcUrl)
     }
     funcRoutes.push(funcRoute)
   }

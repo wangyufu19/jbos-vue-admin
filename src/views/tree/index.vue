@@ -8,7 +8,6 @@
       :props="defaultProps"
       :filter-node-method="filterNode"
       class="filter-tree"
-      default-expand-all
     />
 
   </div>
