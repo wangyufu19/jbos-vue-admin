@@ -45,7 +45,7 @@ export default {
       }
     },
     onClickNode(data, node) {
-      alert(data.text)
+      this.$store.commit('orgtree/SET_CURRENT_NODEID', data.id)
     }
   }
 }

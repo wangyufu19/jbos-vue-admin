@@ -1,13 +1,11 @@
 <template>
 
   <el-tabs v-model="activeName" style="margin-top:15px;" type="card" @tab-click="handleClick">
-    <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key">
-      <keep-alive v-if="activeName=='first'">
-          <dep-info/>
-      </keep-alive>
-      <keep-alive v-else-if="activeName=='second'">
-          <emp-info/>
-      </keep-alive>
+    <el-tab-pane  label="部门信息" name="dep">
+      <dep-info ref="dep" v-if="activeName=='dep'"/>
+    </el-tab-pane>
+    <el-tab-pane label="人员信息" name="emp">
+      <emp-info v-if="activeName=='emp'"/>
     </el-tab-pane>
   </el-tabs>
 
@@ -18,14 +16,15 @@ import depInfo from './depInfo'
 import empInfo from './empInfo'
 export default {
   name: 'TreeMain',
-  components: { depInfo,empInfo },
+  components: { depInfo, empInfo },
   data() {
     return {
-      tabMapOptions: [
-        { label: '部门信息', key: 'first' },
-        { label: '人员信息', key: 'second' }
-      ],
-      activeName: 'first'
+      activeName: 'dep'
+    }
+  },
+  watch: {
+    activeName(val) {
+      this.activeName = val
     }
   },
   created() {

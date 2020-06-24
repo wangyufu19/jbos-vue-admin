@@ -20,6 +20,9 @@ export default {
   components: {
     leftTree,
     treeMain
+  },
+  created() {
+    this.$store.commit('orgtree/SET_CURRENT_NODEID', '0')
   }
 }
 </script>

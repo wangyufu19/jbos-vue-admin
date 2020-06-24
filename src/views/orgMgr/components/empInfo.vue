@@ -48,6 +48,9 @@ export default {
     return {
       datas: []
     }
+  },
+  created() {
+
   }
 }
 </script>
