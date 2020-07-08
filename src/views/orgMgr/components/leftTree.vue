@@ -1,4 +1,5 @@
 <template>
+  <el-card>
   <el-tree
     ref="tree"
     :load="loadNode"
@@ -8,6 +9,7 @@
     lazy
     @node-click="onClickNode"
   />
+  </el-card>
 </template>
 
 <script>

@@ -1,6 +1,6 @@
 <template>
-
-  <el-tabs v-model="activeName" style="margin-top:15px;" type="card" @tab-click="handleClick">
+  <el-card>
+  <el-tabs v-model="activeName"  @tab-click="handleClick">
     <el-tab-pane  label="部门信息" name="dep">
       <dep-info ref="dep" v-if="activeName=='dep'"/>
     </el-tab-pane>
@@ -8,7 +8,7 @@
       <emp-info v-if="activeName=='emp'"/>
     </el-tab-pane>
   </el-tabs>
-
+  </el-card>
 </template>
 
 <script>
