@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <div>
       <el-row :gutter="20">
         <el-col :span="6" :xs="24">
           <leftTree/>
@@ -9,7 +8,6 @@
           <treeMain/>
         </el-col>
       </el-row>
-    </div>
   </div>
 </template>
 
