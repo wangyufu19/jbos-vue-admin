@@ -6,8 +6,9 @@
       </div>
       <div class="filter-container">
         <el-input v-model="search.roleNameS" placeholder="角色名称" class="filter-item" style="width: 300px;" />
-        <el-button size="medium" type="primary" icon="el-icon-search" @click="onSearch">查询</el-button>
-        <el-button size="medium" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="onShowAdd">新增</el-button>
+        <el-button size="medium" type="primary" @click="onSearch">查询</el-button>
+        <el-button size="medium" type="primary" @click="onReset">重置</el-button>
+        <el-button size="medium" style="margin-left: 10px;" type="primary" @click="onShowAdd">新增</el-button>
       </div>
       <el-table
         v-loading="listLoading"
@@ -34,37 +35,21 @@
           </template>
         </el-table-column>
       </el-table>
+      <!--角色列表分页信息-->
       <pagination v-show="total>0" :total="total" :page.sync="queryPage.page" :limit.sync="queryPage.limit" @pagination="getRoleList" />
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-        <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="角色编码" prop="roleCode">
-            <el-input v-model="roleForm.roleCode" />
-          </el-form-item>
-          <el-form-item label="角色名称" prop="roleName">
-            <el-input v-model="roleForm.roleName" />
-          </el-form-item>
-          <el-form-item label="角色类型" prop="roleType">
-            <el-select v-model="roleForm.roleType" placeholder="请选择">
-              <el-option label="功能权限" value="100" />
-              <el-option label="其它" value="101" />
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="dialogStatus==='create'?onAdd():onUpdate()">确定 </el-button>
-        </div>
-      </el-dialog>
+      <!--新增或编辑角色信息-->
+      <add-or-edit-role v-if="addOrUpdateVisible" ref="addOrEditRole" @refreshDataList="getRoleList"/>
     </el-card>
   </div>
 </template>
 
 <script>
-import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
+import { getRoleList, deleteRole } from '@/api/role'
 import Pagination from '@/components/Pagination'
+import AddOrEditRole from './components/addOrEditRole'
 export default {
   name: 'RoleMgr',
-  components: { Pagination },
+  components: { Pagination, AddOrEditRole },
   data() {
     return {
       search: {
@@ -77,17 +62,7 @@ export default {
         page: 1,
         limit: 20
       },
-      dialogFormVisible: false,
-      dialogStatus: '',
-      textMap: {
-        create: '角色信息-新增',
-        update: '角色信息-更新'
-      },
-      roleForm: {
-        id: undefined,
-        roleCode: '',
-        roleName: ''
-      }
+      addOrUpdateVisible: false
     }
   },
   created() {
@@ -107,54 +82,23 @@ export default {
       this.queryPage.roleNameS = this.search.roleNameS
       this.getRoleList()
     },
-    onShowAdd() {
-      this.roleForm = {
-        id: undefined,
-        roleCode: '',
-        roleName: ''
+    onReset() {
+      this.search = {
+        roleNameS: ''
       }
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['roleForm'].clearValidate()
-      })
     },
-    onAdd() {
-      this.$refs['roleForm'].validate((valid) => {
-        if (valid) {
-          addRole(this.roleForm).then(response => {
-            this.datas.unshift(this.roleForm)
-            this.dialogFormVisible = false
-            this.$message({
-              message: '操作成功',
-              type: 'success'
-            })
-          })
-        }
+    onShowAdd() {
+      this.addOrUpdateVisible = true
+      const obj = Object()
+      this.$nextTick(() => {
+        this.$refs['addOrEditRole'].init(obj, 'create')
       })
     },
     onShowUpdate(row) {
-      this.roleForm = Object.assign({}, row) // copy obj
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
+      const roleForm = Object.assign({}, row)
+      this.addOrUpdateVisible = true
       this.$nextTick(() => {
-        this.$refs['roleForm'].clearValidate()
-      })
-    },
-    onUpdate() {
-      this.$refs['roleForm'].validate((valid) => {
-        if (valid) {
-          const formObj = Object.assign({}, this.roleForm)
-          updateRole(formObj).then(response => {
-            const index = this.datas.findIndex(v => v.id === this.roleForm.id)
-            this.datas.splice(index, 1, this.roleForm)
-            this.dialogFormVisible = false
-            this.$message({
-              message: '操作成功',
-              type: 'success'
-            })
-          })
-        }
+        this.$refs['addOrEditRole'].init(roleForm, 'update')
       })
     },
     onDeleteOne(row, index) {
