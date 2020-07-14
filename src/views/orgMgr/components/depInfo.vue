@@ -77,6 +77,7 @@
 <script>
 import { getDepList } from '@/api/dep'
 export default {
+  props: ['getOrgId'],
   data() {
     return {
       search: {
@@ -98,7 +99,12 @@ export default {
     }
   },
   created() {
-    this.getDepList(this.$store.getters.currentNodeId)
+    this.getDepList(this.getOrgId)
+  },
+  watch: {
+    getOrgId(val) {
+      this.getDepList(this.getOrgId)
+    }
   },
   methods: {
     getDepList(orgId) {

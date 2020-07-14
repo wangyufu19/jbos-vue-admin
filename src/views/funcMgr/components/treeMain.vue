@@ -1,26 +1,23 @@
 <template>
   <el-card>
   <el-tabs v-model="activeName"  @tab-click="handleClick">
-    <el-tab-pane  label="部门信息" name="dep">
-      <dep-info ref="dep" v-if="activeName=='dep'" :getOrgId="getOrgId"/>
-    </el-tab-pane>
-    <el-tab-pane label="人员信息" name="emp">
-      <emp-info v-if="activeName=='emp'" :getOrgId="getOrgId"/>
+    <el-tab-pane  label="功能信息" name="func">
+      <func-info ref="dep" v-if="activeName=='func'" :getParentId="getParentId"/>
     </el-tab-pane>
   </el-tabs>
   </el-card>
 </template>
 
 <script>
-import depInfo from './depInfo'
-import empInfo from './empInfo'
+import funcInfo from './funcInfo'
+
 export default {
   name: 'TreeMain',
-  props: ['getOrgId'],
-  components: { depInfo, empInfo },
+  props: ['getParentId'],
+  components: { funcInfo },
   data() {
     return {
-      activeName: 'dep'
+      activeName: 'func'
     }
   },
   watch: {

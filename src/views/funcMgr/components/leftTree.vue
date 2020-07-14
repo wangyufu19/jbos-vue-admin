@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getOgrTree } from '@/api/org'
+import { getFuncTree } from '@/api/func'
 export default {
   data() {
     return {
@@ -33,8 +33,8 @@ export default {
   },
   methods: {
     async loadTreeData(parentId) {
-      await getOgrTree({ parentId: parentId }).then(response => {
-        this.items = response.data.orgTree
+      await getFuncTree({ parentId: parentId }).then(response => {
+        this.items = response.data.funcTree
       })
     },
     async loadNode(node, resolve) {
@@ -47,7 +47,7 @@ export default {
       }
     },
     onClickNode(data, node) {
-      this.$emit('getOrgId', data.id)
+      this.$emit('getParentId', data.id)
     }
   }
 }

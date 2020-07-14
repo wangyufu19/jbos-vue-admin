@@ -48,6 +48,7 @@
 <script>
 import { getEmpList } from '@/api/emp'
 export default {
+  props: ['getOrgId'],
   data() {
     return {
       datas: [],
@@ -55,7 +56,12 @@ export default {
     }
   },
   created() {
-    this.getEmpList(this.$store.getters.currentNodeId)
+    this.getEmpList(this.getOrgId)
+  },
+  watch: {
+    getOrgId(val) {
+      this.getEmpList(this.getOrgId)
+    }
   },
   methods: {
     getEmpList(orgId) {

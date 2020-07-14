@@ -2,10 +2,10 @@
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :span="6" :xs="24">
-        <leftTree @getOrgId="setOrgId" />
+        <leftTree @getParentId="setParentId" />
       </el-col>
       <el-col :span="18" :xs="24">
-        <treeMain :getOrgId="orgId"/>
+        <treeMain :getParentId="parentId"/>
       </el-col>
     </el-row>
   </div>
@@ -14,20 +14,24 @@
 <script>
 import { leftTree, treeMain } from './components'
 export default {
-  name: 'OrgMgr',
+  name: 'FuncMgr',
   components: {
     leftTree,
     treeMain
   },
   data() {
     return {
-      orgId: undefined
+      parentId: undefined
     }
   },
   methods: {
-    setOrgId(orgId) {
-      this.orgId = orgId
+    setParentId(parentId) {
+      this.parentId = parentId
     }
   }
 }
 </script>
+
+<style scoped>
+
+</style>
