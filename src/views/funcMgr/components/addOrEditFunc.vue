@@ -36,14 +36,16 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        create: '角色信息-新增',
-        update: '角色信息-更新'
+        create: '功能信息-新增',
+        update: '功能信息-更新'
       },
       formObj: {
         id: undefined,
-        roleCode: '',
-        roleName: '',
-        roleFunc: ''
+        funcCode: '',
+        funcName: '',
+        funcType: '',
+        funcUrl: '',
+        orderNo: ''
       }
     }
   },
@@ -54,8 +56,12 @@ export default {
         this.dialogFormVisible = true
         this.formObj = {
           id: undefined,
-          roleCode: '',
-          roleName: ''
+          parentId: formObj.parentId,
+          funcCode: '',
+          funcName: '',
+          funcType: '',
+          funcUrl: '',
+          orderNo: ''
         }
         this.$nextTick(() => {
           this.$refs['formObj'].clearValidate()
@@ -83,7 +89,7 @@ export default {
     onUpdate() {
       this.$refs['formObj'].validate((valid) => {
         if (valid) {
-          updateFunc(formObj).then(response => {
+          updateFunc(this.formObj).then(response => {
             this.dialogFormVisible = false
             this.$emit('refreshDataList')
             this.$message({

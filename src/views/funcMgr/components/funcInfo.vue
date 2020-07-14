@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { getFuncList,deleteFunc } from '@/api/func'
+import { getFuncList, deleteFunc } from '@/api/func'
 import AddOrEditFunc from './addOrEditFunc'
 export default {
   props: ['getParentId'],
@@ -94,6 +94,7 @@ export default {
     onShowAdd() {
       this.addOrUpdateVisible = true
       const formObj = Object()
+      formObj.parentId = this.getParentId
       this.$nextTick(() => {
         this.$refs['addOrEditFunc'].init(formObj, 'create')
       })
