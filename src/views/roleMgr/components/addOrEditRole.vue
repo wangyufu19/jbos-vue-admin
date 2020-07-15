@@ -1,14 +1,14 @@
 <template>
   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-    <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
+    <el-form ref="formObj" :model="formObj" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-form-item label="角色编码" prop="roleCode">
-        <el-input v-model="roleForm.roleCode" />
+        <el-input v-model="formObj.roleCode" />
       </el-form-item>
       <el-form-item label="角色名称" prop="roleName">
-        <el-input v-model="roleForm.roleName" />
+        <el-input v-model="formObj.roleName" />
       </el-form-item>
       <el-form-item label="角色类型" prop="roleType">
-        <el-select v-model="roleForm.roleType" placeholder="请选择">
+        <el-select v-model="formObj.roleType" placeholder="请选择">
           <el-option label="功能权限" value="100" />
           <el-option label="其它" value="101" />
         </el-select>
@@ -17,7 +17,6 @@
         <tree-select
           :data="data"
           :default-props="defaultProps"
-
           :node-key="nodeKey"
           :checked-keys="defaultCheckedKeys"
           @popoverHide="popoverHide"
@@ -99,11 +98,16 @@ export default {
         create: '角色信息-新增',
         update: '角色信息-更新'
       },
-      roleForm: {
+      formObj: {
         id: undefined,
         roleCode: '',
         roleName: '',
         roleFunc: ''
+      },
+      rules: {
+        roleCode: [{ required: true, message: '角色编码必须填写', trigger: 'change' }],
+        roleName: [{ required: true, message: '角色名称必须填写', trigger: 'change' }],
+        roleType: [{ required: true, message: '角色类型必须填写', trigger: 'change' }]
       },
       data: menus,
       defaultProps: {
@@ -125,28 +129,28 @@ export default {
     this.defaultCheckedKeys = [1001]
   },
   methods: {
-    init(roleForm, dialogStatus) {
+    init(formObj, dialogStatus) {
       if (dialogStatus === 'create') {
         this.dialogStatus = dialogStatus
         this.dialogFormVisible = true
-        this.roleForm = {
+        this.formObj = {
           id: undefined,
           roleCode: '',
           roleName: ''
         }
         this.$nextTick(() => {
-          this.$refs['roleForm'].clearValidate()
+          this.$refs['formObj'].clearValidate()
         })
       } else {
         this.dialogStatus = dialogStatus
         this.dialogFormVisible = true
-        this.roleForm = roleForm
+        this.formObj = formObj
       }
     },
     onAdd() {
-      this.$refs['roleForm'].validate((valid) => {
+      this.$refs['formObj'].validate((valid) => {
         if (valid) {
-          addRole(this.roleForm).then(response => {
+          addRole(this.formObj).then(response => {
             this.dialogFormVisible = false
             this.$emit('refreshDataList')
             this.$message({
@@ -158,9 +162,9 @@ export default {
       })
     },
     onUpdate() {
-      this.$refs['roleForm'].validate((valid) => {
+      this.$refs['formObj'].validate((valid) => {
         if (valid) {
-          updateRole(formObj).then(response => {
+          updateRole(this.formObj).then(response => {
             this.dialogFormVisible = false
             this.$emit('refreshDataList')
             this.$message({

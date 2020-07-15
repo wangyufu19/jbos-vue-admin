@@ -47,7 +47,7 @@ export default {
       }
     },
     onClickNode(data, node) {
-      this.$emit('getOrgId', data.id)
+      this.$emit('getOrg', data)
     }
   }
 }

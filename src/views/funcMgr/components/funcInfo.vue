@@ -4,9 +4,9 @@
 
       <el-input v-model="search.funcCodeS" placeholder="功能编码" class="filter-item" style="width: 200px;" />
       <el-input v-model="search.funcNameS" placeholder="功能名称" class="filter-item" style="width: 200px;" />
-      <el-button  size="medium" type="primary" icon="el-icon-search" @click="onSearch">查询</el-button>
+      <el-button  size="medium" type="primary"  @click="onSearch">查询</el-button>
       <el-button size="medium" type="primary" @click="onReset">重置</el-button>
-      <el-button size="medium" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="onShowAdd">新增</el-button>
+      <el-button size="medium" style="margin-left: 10px;" type="primary"  @click="onShowAdd">新增</el-button>
     </div>
     <el-table
       v-loading="listLoading"

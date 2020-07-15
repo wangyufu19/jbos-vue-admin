@@ -2,10 +2,10 @@
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :span="6" :xs="24">
-        <leftTree @getOrgId="setOrgId" />
+        <leftTree @getOrg="setOrg"/>
       </el-col>
       <el-col :span="18" :xs="24">
-        <treeMain :getOrgId="orgId"/>
+        <treeMain :getOrgId="orgId" :getOrgName="orgName"/>
       </el-col>
     </el-row>
   </div>
@@ -21,12 +21,14 @@ export default {
   },
   data() {
     return {
-      orgId: undefined
+      orgId: undefined,
+      orgName: undefined
     }
   },
   methods: {
-    setOrgId(orgId) {
-      this.orgId = orgId
+    setOrg(org) {
+      this.orgId = org.id
+      this.orgName = org.text
     }
   }
 }

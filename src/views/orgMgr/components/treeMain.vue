@@ -2,10 +2,10 @@
   <el-card>
   <el-tabs v-model="activeName"  @tab-click="handleClick">
     <el-tab-pane  label="部门信息" name="dep">
-      <dep-info ref="dep" v-if="activeName=='dep'" :getOrgId="getOrgId"/>
+      <dep-info ref="dep" v-if="activeName=='dep'" :getOrgId="getOrgId" :getOrgName="getOrgName"/>
     </el-tab-pane>
     <el-tab-pane label="人员信息" name="emp">
-      <emp-info v-if="activeName=='emp'" :getOrgId="getOrgId"/>
+      <emp-info v-if="activeName=='emp'" :getOrgId="getOrgId" :getOrgName="getOrgName"/>
     </el-tab-pane>
   </el-tabs>
   </el-card>
@@ -16,7 +16,7 @@ import depInfo from './depInfo'
 import empInfo from './empInfo'
 export default {
   name: 'TreeMain',
-  props: ['getOrgId'],
+  props: ['getOrgId', 'getOrgName'],
   components: { depInfo, empInfo },
   data() {
     return {

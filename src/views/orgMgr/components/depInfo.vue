@@ -1,15 +1,11 @@
 <template>
   <div>
     <div class="filter-container">
-
       <el-input v-model="search.depCodeS" placeholder="部门编码" class="filter-item" style="width: 200px;" />
       <el-input v-model="search.depNameS" placeholder="部门名称" class="filter-item" style="width: 200px;" />
-      <el-button  size="medium" type="primary" icon="el-icon-search" @click="handleFilter">
-        查询
-      </el-button>
-      <el-button size="medium" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
-        新增
-      </el-button>
+      <el-button  size="medium" type="primary"  @click="onSearch">查询</el-button>
+      <el-button  size="medium" type="primary"  @click="onReset">重置</el-button>
+      <el-button size="medium" style="margin-left: 10px;" type="primary" @click="onShowAdd">新增</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -45,39 +41,22 @@
       />
       <el-table-column label="操作" align="center" width="180">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)"> 编辑</el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)"> 删除 </el-button>
+          <el-button type="primary" size="mini" @click="onShowUpdate(row)"> 编辑</el-button>
+          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="onDeleteOne(row,$index)"> 删除 </el-button>
         </template>
       </el-table-column>
-
     </el-table>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form :model="depForm" :rules="rules" ref="depForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="部门编码" prop="depCode">
-          <el-input v-model="depForm.depCode"></el-input>
-        </el-form-item>
-        <el-form-item label="部门名称" prop="depCode">
-          <el-input v-model="depForm.depName"></el-input>
-        </el-form-item>
-        <el-form-item label="部门级别" prop="depLevel">
-          <el-select v-model="depForm.depLevel" placeholder="请选择">
-            <el-option label="一级部门" value="100"></el-option>
-            <el-option label="二级部门" value="101"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="部门负责人" prop="depCharge">
-        </el-form-item>
-        <el-form-item label="部门分管领导" prop="depDirector">
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+    <!--新增或编辑部门信息-->
+    <add-or-edit-dep v-if="addOrUpdateVisible" ref="addOrEditDep" @refreshDataList="getDepList"/>
   </div>
 </template>
 
 <script>
-import { getDepList } from '@/api/dep'
+import { getDepList ,deleteDep } from '@/api/dep'
+import AddOrEditDep from './addOrEditDep'
 export default {
   props: ['getOrgId'],
+  components: { AddOrEditDep },
   data() {
     return {
       search: {
@@ -86,16 +65,7 @@ export default {
       },
       datas: [],
       listLoading: true,
-      dialogFormVisible: false,
-      dialogStatus: '',
-      textMap: {
-        create: '部门信息-新增',
-        update: '部门信息-更新'
-      },
-      depForm: {
-        depCode: '',
-        depName: ''
-      }
+      addOrUpdateVisible: false
     }
   },
   created() {
@@ -114,11 +84,37 @@ export default {
         this.listLoading = false
       })
     },
-    handleCreate() {
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
+    onSearch() {
+      this.getDepList(this.getOrgId)
+    },
+    onReset() {
+      this.search = {
+        depCodeS: '',
+        depNameS: ''
+      }
+    },
+    onShowAdd() {
+      this.addOrUpdateVisible = true
+      const formObj = Object()
+      formObj.orgId = this.getOrgId
       this.$nextTick(() => {
-        this.$refs['depForm'].clearValidate()
+        this.$refs['addOrEditDep'].init(formObj, 'create')
+      })
+    },
+    onShowUpdate(row) {
+      const formObj = Object.assign({}, row)
+      this.addOrUpdateVisible = true
+      this.$nextTick(() => {
+        this.$refs['addOrEditDep'].init(formObj, 'update')
+      })
+    },
+    onDeleteOne(row, index) {
+      deleteDep({ id: row.id }).then(response => {
+        this.$message({
+          message: '操作成功',
+          type: 'success'
+        })
+        this.datas.splice(index, 1)
       })
     }
   }

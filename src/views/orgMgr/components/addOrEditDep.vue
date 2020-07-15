@@ -1,23 +1,21 @@
 <template>
   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-    <el-form ref="formObj" :model="formObj" :rules="rules" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="功能编码" prop="funcCode">
-        <el-input v-model="formObj.funcCode" />
+    <el-form :model="formObj" :rules="rules" ref="formObj" label-width="100px" class="demo-ruleForm">
+      <el-form-item label="部门编码" prop="depCode">
+        <el-input v-model="formObj.depCode"></el-input>
       </el-form-item>
-      <el-form-item label="功能名称" prop="funcName">
-        <el-input v-model="formObj.funcName" />
+      <el-form-item label="部门名称" prop="depCode">
+        <el-input v-model="formObj.depName"></el-input>
       </el-form-item>
-      <el-form-item label="功能类型" prop="funcType">
-        <el-select v-model="formObj.funcType" placeholder="请选择">
-          <el-option label="目录" value="0" />
-          <el-option label="菜单" value="1" />
+      <el-form-item label="部门级别" prop="depLevel">
+        <el-select v-model="formObj.depLevel" placeholder="请选择">
+          <el-option label="一级部门" value="100"></el-option>
+          <el-option label="二级部门" value="101"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="路由地址" prop="funcUrl">
-        <el-input v-model="formObj.funcUrl" />
+      <el-form-item label="部门负责人" prop="depCharge">
       </el-form-item>
-      <el-form-item label="排序" prop="orderNo">
-        <el-input v-model.number="formObj.orderNo" />
+      <el-form-item label="部门分管领导" prop="depDirector">
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -28,33 +26,21 @@
 </template>
 
 <script>
-import { addFunc, updateFunc } from '@/api/func'
+import { addDep , updateDep } from '@/api/dep'
 export default {
-  name: 'AddOrEditFunc',
+  name: 'AddOrEditDep',
   data() {
     return {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        create: '功能信息-新增',
-        update: '功能信息-更新'
+        create: '部门信息-新增',
+        update: '部门信息-更新'
       },
       formObj: {
-        id: undefined,
-        funcCode: '',
-        funcName: '',
-        funcType: '',
-        funcUrl: '',
-        orderNo: ''
-      },
-      rules: {
-        funcCode: [{ required: true, message: '功能编码必须填写', trigger: 'change' }],
-        funcName: [{ required: true, message: '功能名称必须填写', trigger: 'change' }],
-        funcType: [{ required: true, message: '功能类型必须填写', trigger: 'change' }],
-        orderNo: [
-          { required: true, message: '排序必须填写', trigger: 'change' },
-          { type: 'number', message: '排序必须为数字值' }
-        ]
+        depCode: '',
+        depName: '',
+        depLevel: ''
       }
     }
   },
@@ -65,12 +51,9 @@ export default {
         this.dialogFormVisible = true
         this.formObj = {
           id: undefined,
-          parentId: formObj.parentId,
-          funcCode: '',
-          funcName: '',
-          funcType: '',
-          funcUrl: '',
-          orderNo: ''
+          depCode: '',
+          depName: '',
+          depLevel: ''
         }
         this.$nextTick(() => {
           this.$refs['formObj'].clearValidate()
@@ -84,7 +67,7 @@ export default {
     onAdd() {
       this.$refs['formObj'].validate((valid) => {
         if (valid) {
-          addFunc(this.formObj).then(response => {
+          addDep(this.formObj).then(response => {
             this.dialogFormVisible = false
             this.$emit('refreshDataList')
             this.$message({
@@ -98,7 +81,7 @@ export default {
     onUpdate() {
       this.$refs['formObj'].validate((valid) => {
         if (valid) {
-          updateFunc(this.formObj).then(response => {
+          updateDep(this.formObj).then(response => {
             this.dialogFormVisible = false
             this.$emit('refreshDataList')
             this.$message({

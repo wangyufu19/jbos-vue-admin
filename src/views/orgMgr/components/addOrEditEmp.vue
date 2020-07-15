@@ -1,23 +1,30 @@
 <template>
   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
     <el-form ref="formObj" :model="formObj" :rules="rules" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="功能编码" prop="funcCode">
-        <el-input v-model="formObj.funcCode" />
+      <el-form-item label="工号" prop="badge">
+        <el-input v-model="formObj.badge" />
       </el-form-item>
-      <el-form-item label="功能名称" prop="funcName">
-        <el-input v-model="formObj.funcName" />
+      <el-form-item label="姓名" prop="empName">
+        <el-input v-model="formObj.empName" />
       </el-form-item>
-      <el-form-item label="功能类型" prop="funcType">
-        <el-select v-model="formObj.funcType" placeholder="请选择">
-          <el-option label="目录" value="0" />
-          <el-option label="菜单" value="1" />
+      <el-form-item label="所属机构" prop="orgName">
+        <el-input v-model="formObj.orgName" :disabled="true"/>
+      </el-form-item>
+      <el-form-item label="所属部门" prop="depName">
+        <el-input v-model="formObj.depName" />
+      </el-form-item>
+      <el-form-item label="职务" prop="headShip">
+        <el-select v-model="formObj.headShip" placeholder="请选择">
+          <el-option label="系统开发" value="100" />
+          <el-option label="系统测试" value="101" />
         </el-select>
       </el-form-item>
-      <el-form-item label="路由地址" prop="funcUrl">
-        <el-input v-model="formObj.funcUrl" />
-      </el-form-item>
-      <el-form-item label="排序" prop="orderNo">
-        <el-input v-model.number="formObj.orderNo" />
+      <el-form-item label="员工状态" prop="empStatus">
+        <el-select v-model="formObj.empStatus" placeholder="请选择">
+          <el-option label="正常" value="01" />
+          <el-option label="锁定" value="02" />
+          <el-option label="离职" value="03" />
+        </el-select>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -28,33 +35,25 @@
 </template>
 
 <script>
-import { addFunc, updateFunc } from '@/api/func'
+import { addEmp, updateEmp } from '@/api/emp'
 export default {
-  name: 'AddOrEditFunc',
+  name: 'AddOrEditEmp',
   data() {
     return {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        create: '功能信息-新增',
-        update: '功能信息-更新'
+        create: '人员信息-新增',
+        update: '人员信息-更新'
       },
       formObj: {
-        id: undefined,
-        funcCode: '',
-        funcName: '',
-        funcType: '',
-        funcUrl: '',
-        orderNo: ''
-      },
-      rules: {
-        funcCode: [{ required: true, message: '功能编码必须填写', trigger: 'change' }],
-        funcName: [{ required: true, message: '功能名称必须填写', trigger: 'change' }],
-        funcType: [{ required: true, message: '功能类型必须填写', trigger: 'change' }],
-        orderNo: [
-          { required: true, message: '排序必须填写', trigger: 'change' },
-          { type: 'number', message: '排序必须为数字值' }
-        ]
+        badge: '',
+        empName: '',
+        orgId: '',
+        orgName: '',
+        depName: '',
+        headShip: '',
+        empStatus: ''
       }
     }
   },
@@ -65,12 +64,13 @@ export default {
         this.dialogFormVisible = true
         this.formObj = {
           id: undefined,
-          parentId: formObj.parentId,
-          funcCode: '',
-          funcName: '',
-          funcType: '',
-          funcUrl: '',
-          orderNo: ''
+          badge: '',
+          empName: '',
+          orgId: formObj.orgId,
+          orgName: formObj.orgName,
+          depName: '',
+          headShip: '',
+          empStatus: ''
         }
         this.$nextTick(() => {
           this.$refs['formObj'].clearValidate()
@@ -84,7 +84,7 @@ export default {
     onAdd() {
       this.$refs['formObj'].validate((valid) => {
         if (valid) {
-          addFunc(this.formObj).then(response => {
+          addEmp(this.formObj).then(response => {
             this.dialogFormVisible = false
             this.$emit('refreshDataList')
             this.$message({
@@ -98,7 +98,7 @@ export default {
     onUpdate() {
       this.$refs['formObj'].validate((valid) => {
         if (valid) {
-          updateFunc(this.formObj).then(response => {
+          updateEmp(this.formObj).then(response => {
             this.dialogFormVisible = false
             this.$emit('refreshDataList')
             this.$message({
