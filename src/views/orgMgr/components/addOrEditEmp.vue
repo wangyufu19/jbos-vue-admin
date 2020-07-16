@@ -2,16 +2,33 @@
   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
     <el-form ref="formObj" :model="formObj" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-form-item label="工号" prop="badge">
-        <el-input v-model="formObj.badge" />
+        <el-input v-model="formObj.badge" v-if="dialogStatus==='create'" :disabled="false"/>
+        <el-input v-model="formObj.badge" v-else-if="dialogStatus==='update'" :disabled="true"/>
       </el-form-item>
       <el-form-item label="姓名" prop="empName">
         <el-input v-model="formObj.empName" />
       </el-form-item>
       <el-form-item label="所属机构" prop="orgName">
-        <el-input v-model="formObj.orgName" :disabled="true"/>
+        <el-input v-model="formObj.orgName" :disabled="true" />
       </el-form-item>
       <el-form-item label="所属部门" prop="depName">
-        <el-input v-model="formObj.depName" />
+        <el-select
+          v-model="formObj.depName"
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请输入关键词"
+          :remote-method="onSearchDep"
+          :loading="loading"
+          @change="onDepChange"
+        >
+          <el-option
+            v-for="item in deps"
+            :key="item.id"
+            :label="item.depName"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="职务" prop="headShip">
         <el-select v-model="formObj.headShip" placeholder="请选择">
@@ -36,6 +53,7 @@
 
 <script>
 import { addEmp, updateEmp } from '@/api/emp'
+import { getDepList } from '@/api/dep'
 export default {
   name: 'AddOrEditEmp',
   data() {
@@ -51,9 +69,17 @@ export default {
         empName: '',
         orgId: '',
         orgName: '',
+        depId: '',
         depName: '',
         headShip: '',
         empStatus: ''
+      },
+      deps: [],
+      loading: false,
+      rules: {
+        empName: [{ required: true, message: '姓名必须填写', trigger: 'change' }],
+        depName: [{ required: true, message: '所属部门必须填写', trigger: 'change' }],
+        empStatus: [{ required: true, message: '员工状态必须填写', trigger: 'change' }]
       }
     }
   },
@@ -80,6 +106,22 @@ export default {
         this.dialogFormVisible = true
         this.formObj = formObj
       }
+      this.deps = []
+    },
+    onSearchDep(query) {
+      if (query !== '') {
+        this.loading = true
+        this.formObj.depNameS = query
+        getDepList(this.formObj).then(response => {
+          this.deps = response.data.deps
+          this.loading = false
+        })
+      } else {
+        this.deps = []
+      }
+    },
+    onDepChange(value) {
+      this.formObj.depId = value
     },
     onAdd() {
       this.$refs['formObj'].validate((valid) => {

@@ -69,7 +69,7 @@ export default {
     }
   },
   created() {
-    this.getDepList(this.getOrgId)
+    this.getDepList()
   },
   watch: {
     getOrgId(val) {
@@ -77,15 +77,16 @@ export default {
     }
   },
   methods: {
-    getDepList(orgId) {
+    getDepList() {
       this.listLoading = true
-      getDepList({ orgId: orgId }).then(response => {
+      this.search.orgId = this.getOrgId
+      getDepList(this.search).then(response => {
         this.datas = response.data.deps
         this.listLoading = false
       })
     },
     onSearch() {
-      this.getDepList(this.getOrgId)
+      this.getDepList()
     },
     onReset() {
       this.search = {
