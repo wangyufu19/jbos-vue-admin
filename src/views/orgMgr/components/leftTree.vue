@@ -1,14 +1,14 @@
 <template>
   <el-card>
-  <el-tree
-    ref="tree"
-    :load="loadNode"
-    :props="defaultProps"
-    :filter-node-method="filterNode"
-    class="filter-tree"
-    lazy
-    @node-click="onClickNode"
-  />
+    <el-tree
+      ref="tree"
+      :load="loadNode"
+      :props="defaultProps"
+      :filter-node-method="filterNode"
+      class="filter-tree"
+      lazy
+      @node-click="onClickNode"
+    />
   </el-card>
 </template>
 

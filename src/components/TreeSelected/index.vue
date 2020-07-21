@@ -12,12 +12,12 @@
         ref="tree"
         class="common-tree"
         :style="style"
-        :data="data"
+        :load="loadNode"
+        lazy
         :props="defaultProps"
         :show-checkbox="multiple"
         :node-key="nodeKey"
         :check-strictly="checkStrictly"
-        default-expand-all
         :expand-on-click-node="false"
         :default-checked-keys="defaultCheckedKeys"
         :highlight-current="true"
@@ -56,6 +56,13 @@ export default {
         return {}
       }
     },
+    loadNode: {
+      type: Function,
+      default() {
+        return {}
+      }
+    },
+
     // 配置是否可多选
     multiple: {
       type: Boolean,
@@ -119,13 +126,13 @@ export default {
       if (this.multiple) {
         this.defaultCheckedKeys = this.checkedKeys
         this.selectedData = this.checkedKeys.map((item) => {
-          var node = this.$refs.tree.getNode(item)
+          const node = this.$refs.tree.getNode(item)
           return node.label
         })
       } else {
-        var item = this.checkedKeys[0]
+        const item = this.checkedKeys[0]
         this.$refs.tree.setCurrentKey(item)
-        var node = this.$refs.tree.getNode(item)
+        const node = this.$refs.tree.getNode(item);
         this.selectedData = node.label
       }
     }
@@ -155,9 +162,9 @@ export default {
     },
     // 节点选中状态发生变化时的回调
     handleCheckChange() {
-      var checkedKeys = this.$refs.tree.getCheckedKeys() // 所有被选中的节点的 key 所组成的数组数据
+      const checkedKeys = this.$refs.tree.getCheckedKeys(); // 所有被选中的节点的 key 所组成的数组数据
       this.options = checkedKeys.map((item) => {
-        var node = this.$refs.tree.getNode(item) // 所有被选中的节点对应的node
+        const node = this.$refs.tree.getNode(item); // 所有被选中的节点对应的node
         const tmpMap = {}
         tmpMap.value = node.key
         tmpMap.label = node.label
@@ -166,6 +173,15 @@ export default {
       this.selectedData = this.options.map((item) => {
         return item.label
       })
+    },
+    // 清除被选中的节点
+    clearCheckData() {
+      this.defaultCheckedKeys = []
+      this.options = []
+      this.selectedData = []
+      this.checkedIds = []
+      this.checkedData = []
+      this.$refs.tree.setCheckedKeys([])
     }
   }
 }

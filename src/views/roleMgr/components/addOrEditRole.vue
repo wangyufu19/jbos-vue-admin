@@ -15,7 +15,9 @@
       </el-form-item>
       <el-form-item label="角色功能" prop="roleFunc">
         <tree-select
-          :data="data"
+          ref="treeselect"
+          :loadNode="loadNode"
+          :multiple="true"
           :default-props="defaultProps"
           :node-key="nodeKey"
           :checked-keys="defaultCheckedKeys"
@@ -32,59 +34,9 @@
 
 <script>
 import { addRole, updateRole } from '@/api/role'
+import { getFuncTree } from '@/api/func'
 import TreeSelect from '@/components/TreeSelected'
-var menus = [
-  {
-    'menuId': 1,
-    'menuName': '系统管理',
-    'childrenList': [
-      {
-        'menuId': 100,
-        'menuName': '用户管理',
-        'childrenList': [
-          {
-            'menuId': 1000,
-            'menuName': '用户查询'
-          },
-          {
-            'menuId': 1001,
-            'menuName': '用户新增'
-          },
-          {
-            'menuId': 1002,
-            'menuName': '用户修改'
-          },
-          {
-            'menuId': 1003,
-            'menuName': '用户删除'
-          }
-        ]
-      },
-      {
-        'menuId': 101,
-        'menuName': '角色管理',
-        'childrenList': [
-          {
-            'menuId': 1006,
-            'menuName': '角色查询'
-          },
-          {
-            'menuId': 1007,
-            'menuName': '角色新增'
-          },
-          {
-            'menuId': 1008,
-            'menuName': '角色修改'
-          },
-          {
-            'menuId': 1011,
-            'menuName': '删除角色'
-          }
-        ]
-      }
-    ]
-  }
-]
+
 export default {
   name: 'AddOrEditRole',
 
@@ -109,24 +61,15 @@ export default {
         roleName: [{ required: true, message: '角色名称必须填写', trigger: 'change' }],
         roleType: [{ required: true, message: '角色类型必须填写', trigger: 'change' }]
       },
-      data: menus,
+      items: [],
       defaultProps: {
-        children: 'childrenList',
-        label: 'menuName'
+        label: 'text',
+        children: 'zones',
+        isLeaf: 'leaf'
       },
-      nodeKey: 'menuId',
+      nodeKey: 'id',
       defaultCheckedKeys: []
     }
-  },
-  created() {
-    // 注意：初始化defaultCheckedKeys时，在created里面
-    // 父组件先执行自己的created，然后子组件开始执行自己的created和mounted，最后父组件再执行自己的mounted。
-    // 因为此页面加载，先执行该组件自己的created，然后执行TreeSelect组件的created和mounted，最后执行该组件的mounted
-    this.defaultCheckedKeys = [1000]
-  },
-  mounted() {
-    // 此处初始化defaultCheckedKeys，没效果
-    this.defaultCheckedKeys = [1001]
   },
   methods: {
     init(formObj, dialogStatus) {
@@ -138,6 +81,7 @@ export default {
           roleCode: '',
           roleName: ''
         }
+        this.$refs['treeselect'].clearCheckData()
         this.$nextTick(() => {
           this.$refs['formObj'].clearValidate()
         })
@@ -145,6 +89,23 @@ export default {
         this.dialogStatus = dialogStatus
         this.dialogFormVisible = true
         this.formObj = formObj
+      }
+    },
+    popoverHide(checkedIds, checkedData) {
+
+    },
+    async loadTreeData(parentId) {
+      await getFuncTree({ parentId: parentId }).then(response => {
+        this.items = response.data.funcTree
+      })
+    },
+    async loadNode(node, resolve) {
+      if (node.level === 0) {
+        await this.loadTreeData('0')
+        return resolve(this.items)
+      } else if (node.level > 0) {
+        await this.loadTreeData(node.data.id)
+        return resolve(this.items)
       }
     },
     onAdd() {

@@ -26,6 +26,11 @@
         width="100"
       />
       <el-table-column
+        prop="parentDepName"
+        label="上级部门"
+        width="100"
+      />
+      <el-table-column
         prop="depLevel"
         label="部门级别"
         width="100"

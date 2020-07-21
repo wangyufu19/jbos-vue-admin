@@ -1,6 +1,6 @@
 <template>
   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-    <el-form ref="formObj" :model="formObj" :rules="rules" label-width="100px" class="demo-ruleForm">
+    <el-form ref="formObj" :model="formObj" :rules="rules" label-width="100px" class="demo-ruleForm" >
       <el-form-item label="工号" prop="badge">
         <el-input v-model="formObj.badge" v-if="dialogStatus==='create'" :disabled="false"/>
         <el-input v-model="formObj.badge" v-else-if="dialogStatus==='update'" :disabled="true"/>
