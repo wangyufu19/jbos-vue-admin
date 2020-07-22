@@ -1,10 +1,9 @@
 <template>
   <el-card>
-  <el-tabs v-model="activeName"  @tab-click="handleClick">
-    <el-tab-pane  label="功能信息" name="func">
-      <func-info ref="dep" v-if="activeName=='func'" :getParentId="getParentId"/>
-    </el-tab-pane>
-  </el-tabs>
+    <div slot="header" class="clearfix">
+      <span>功能列表</span>
+    </div>
+    <func-info ref="dep" v-if="activeName=='func'" :getParentId="getParentId"/>
   </el-card>
 </template>
 

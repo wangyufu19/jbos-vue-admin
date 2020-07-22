@@ -36,12 +36,12 @@
         width="100"
       />
       <el-table-column
-        prop="depCharge"
+        prop="depChargeName"
         label="部门负责人"
         width="100"
       />
       <el-table-column
-        prop="depDirector"
+        prop="depDirectorName"
         label="部门分管领导"
       />
       <el-table-column label="操作" align="center" width="180">

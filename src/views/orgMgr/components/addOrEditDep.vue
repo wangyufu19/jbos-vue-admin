@@ -1,21 +1,59 @@
 <template>
   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-    <el-form :model="formObj" :rules="rules" ref="formObj" label-width="100px" class="demo-ruleForm">
+    <el-form ref="formObj" :model="formObj" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-form-item label="部门编码" prop="depCode">
-        <el-input v-model="formObj.depCode"></el-input>
+        <el-input v-model="formObj.depCode" v-if="dialogStatus==='create'" :disabled="false"/>
+        <el-input v-model="formObj.depCode" v-else-if="dialogStatus==='update'" :disabled="true"/>
       </el-form-item>
-      <el-form-item label="部门名称" prop="depCode">
-        <el-input v-model="formObj.depName"></el-input>
+      <el-form-item label="部门名称" prop="depName">
+        <el-input v-model="formObj.depName" />
       </el-form-item>
       <el-form-item label="部门级别" prop="depLevel">
         <el-select v-model="formObj.depLevel" placeholder="请选择">
-          <el-option label="一级部门" value="100"></el-option>
-          <el-option label="二级部门" value="101"></el-option>
+          <el-option label="一级部门" value="100" />
+          <el-option label="二级部门" value="101" />
         </el-select>
       </el-form-item>
-      <el-form-item label="部门负责人" prop="depCharge">
+      <el-form-item label="部门负责人" prop="depChargeName">
+        <el-select
+          v-model="formObj.depChargeName"
+          filterable
+          clearable
+          remote
+          reserve-keyword
+          placeholder="请输入"
+          :remote-method="onSearchDepEmp"
+          :loading="loading"
+          @change="onDepChargeChange"
+        >
+          <el-option
+            v-for="item in emps"
+            :key="item.badge"
+            :label="item.depEmpName"
+            :value="item.badge"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="部门分管领导" prop="depDirector">
+      <el-form-item label="部门分管领导" prop="depDirectorName">
+        <el-select
+          v-model="formObj.depDirectorName"
+          filterable
+          clearable
+          remote
+          reserve-keyword
+          placeholder="请输入"
+          :remote-method="onSearchDepEmp"
+          :loading="loading"
+          @change="onDepDirectorChange"
+        >
+          <el-option
+            v-for="item in emps"
+            :key="item.badge"
+            :label="item.depEmpName"
+            :value="item.badge"
+            :loading="loading"
+          />
+        </el-select>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -26,7 +64,8 @@
 </template>
 
 <script>
-import { addDep , updateDep } from '@/api/dep'
+import { addDep, updateDep } from '@/api/dep'
+import { getEmpList } from '@/api/emp'
 export default {
   name: 'AddOrEditDep',
   data() {
@@ -38,9 +77,19 @@ export default {
         update: '部门信息-更新'
       },
       formObj: {
+        orgId: '',
         depCode: '',
         depName: '',
-        depLevel: ''
+        depLevel: '',
+        depCharge: '',
+        depDirector: ''
+      },
+      emps: [],
+      loading: false,
+      rules: {
+        depCode: [{ required: true, message: '部门编码必须填写', trigger: 'change' }],
+        depName: [{ required: true, message: '部门名称必须填写', trigger: 'change' }],
+        depLevel: [{ required: true, message: '部门级别必须填写', trigger: 'change' }]
       }
     }
   },
@@ -51,9 +100,14 @@ export default {
         this.dialogFormVisible = true
         this.formObj = {
           id: undefined,
+          orgId: formObj.orgId,
           depCode: '',
           depName: '',
-          depLevel: ''
+          depLevel: '',
+          depCharge: '',
+          depChargeName: '',
+          depDirector: '',
+          depDirectorName: ''
         }
         this.$nextTick(() => {
           this.$refs['formObj'].clearValidate()
@@ -63,6 +117,24 @@ export default {
         this.dialogFormVisible = true
         this.formObj = formObj
       }
+    },
+    onSearchDepEmp(query) {
+      if (query !== '') {
+        this.loading = true
+        this.formObj.empNameS = query
+        getEmpList(this.formObj).then(response => {
+          this.emps = response.data.emps
+          this.loading = false
+        })
+      } else {
+        this.emps = []
+      }
+    },
+    onDepChargeChange(value) {
+      this.formObj.depCharge = value
+    },
+    onDepDirectorChange(value) {
+      this.formObj.depDirector = value
     },
     onAdd() {
       this.$refs['formObj'].validate((valid) => {

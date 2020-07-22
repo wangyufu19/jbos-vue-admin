@@ -15,9 +15,10 @@
         <el-select
           v-model="formObj.depName"
           filterable
+          clearable
           remote
           reserve-keyword
-          placeholder="请输入关键词"
+          placeholder="请输入"
           :remote-method="onSearchDep"
           :loading="loading"
           @change="onDepChange"
@@ -77,6 +78,7 @@ export default {
       deps: [],
       loading: false,
       rules: {
+        badge: [{ required: true, message: '工号必须填写', trigger: 'change' }],
         empName: [{ required: true, message: '姓名必须填写', trigger: 'change' }],
         depName: [{ required: true, message: '所属部门必须填写', trigger: 'change' }],
         empStatus: [{ required: true, message: '员工状态必须填写', trigger: 'change' }]

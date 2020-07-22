@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="filter-container">
-
       <el-input v-model="search.funcCodeS" placeholder="功能编码" class="filter-item" style="width: 200px;" />
       <el-input v-model="search.funcNameS" placeholder="功能名称" class="filter-item" style="width: 200px;" />
       <el-button  size="medium" type="primary"  @click="onSearch">查询</el-button>
@@ -41,7 +40,6 @@
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="onDeleteOne(row,$index)"> 删除 </el-button>
         </template>
       </el-table-column>
-
     </el-table>
     <!--新增或编辑功能信息-->
     <add-or-edit-func v-if="addOrUpdateVisible" ref="addOrEditFunc" @refreshDataList="getFuncList"/>
