@@ -9,7 +9,7 @@
       <el-button size="medium" style="margin-left: 10px;" type="primary" @click="onShowAdd">保存</el-button>
     </div>
     <el-table
-
+      v-loading="listLoading"
       :data="datas"
       border
       stripe
@@ -20,19 +20,43 @@
       <el-table-column
         prop="dictCode"
         label="字典编码"
-        width="260"
+        width="200"
       />
       <el-table-column
         prop="dictName"
         label="字典名称"
+        width="200"
+      />
+      <el-table-column
+        prop="orderNO"
+        label="排序"
       />
     </el-table>
   </el-card>
 </template>
 
 <script>
+import { getDictCodeList } from '@/api/dict'
 export default {
-  name: 'DictCode'
+  name: 'DictCode',
+  data() {
+    return {
+      datas: [],
+      listLoading: true
+    }
+  },
+  created() {
+    this.getDictCodeList()
+  },
+  methods: {
+    getDictCodeList() {
+      this.listLoading = true
+      getDictCodeList().then(response => {
+        this.datas = response.data.dictCodes
+        this.listLoading = false
+      })
+    }
+  }
 }
 </script>
 

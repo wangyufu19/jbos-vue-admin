@@ -10,7 +10,7 @@
       <el-button size="medium" style="margin-left: 10px;" type="primary" @click="onShowAdd">新增</el-button>
     </div>
     <el-table
-
+      v-loading="listLoading"
       :data="datas"
       border
       stripe
@@ -21,12 +21,12 @@
       <el-table-column
         prop="typeId"
         label="类型编码"
-        width="120"
+        width="180"
       />
       <el-table-column
         prop="typeName"
         label="类型名称"
-        width="120"
+        width="130"
       />
       <el-table-column label="操作" align="center">
         <template slot-scope="{row,$index}">
@@ -36,11 +36,12 @@
       </el-table-column>
     </el-table>
     <!--角色列表分页信息-->
-    <pagination v-show="total>0" :total="total" :page.sync="queryPage.page" :limit.sync="queryPage.limit" @pagination="getRoleList" />
+    <pagination v-show="total>0" :total="total" :page.sync="queryPage.page" :limit.sync="queryPage.limit" @pagination="getDictTypeList" />
   </el-card>
 </template>
 
 <script>
+import { getDictTypeList } from '@/api/dict'
 export default {
   name: 'DictType',
   data() {
@@ -56,6 +57,18 @@ export default {
         limit: 20
       },
       addOrUpdateVisible: false
+    }
+  },
+  created() {
+    this.getDictTypeList()
+  },
+  methods: {
+    getDictTypeList() {
+      this.listLoading = true
+      getDictTypeList(this.search).then(response => {
+        this.datas = response.data.dictTypes
+        this.listLoading = false
+      })
     }
   }
 }
