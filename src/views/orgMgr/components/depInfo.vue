@@ -7,6 +7,7 @@
       <el-button  size="medium" type="primary"  @click="onReset">重置</el-button>
       <el-button size="medium" style="margin-left: 10px;" type="primary" @click="onShowAdd">新增</el-button>
     </div>
+
     <el-table
       v-loading="listLoading"
       :data="datas"
@@ -57,7 +58,7 @@
 </template>
 
 <script>
-import { getDepList ,deleteDep } from '@/api/dep'
+import { getDepList , deleteDep } from '@/api/dep'
 import AddOrEditDep from './addOrEditDep'
 export default {
   props: ['getOrgId'],
