@@ -1,5 +1,13 @@
 import request from "@/utils/request";
 
+export function getCacheDictCodeList(params) {
+  return request({
+    url: '/sys/dict/getCacheDictCodeList',
+    method: 'get',
+    params
+  })
+}
+
 export function getDictTypeList(params) {
   return request({
     url: '/sys/dict/getDictTypeList',

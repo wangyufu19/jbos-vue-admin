@@ -32,16 +32,31 @@
         </el-select>
       </el-form-item>
       <el-form-item label="职务" prop="headShip">
-        <el-select v-model="formObj.headShip" placeholder="请选择">
-          <el-option label="系统开发" value="100" />
-          <el-option label="系统测试" value="101" />
+        <el-select
+          v-model="formObj.headShip"
+          clearable
+          :loading="loading"
+          placeholder="请选择">
+          <el-option
+            v-for="item in headShipDict"
+            :key="item.DICTID"
+            :label="item.DICTNAME"
+            :value="item.DICTID"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="员工状态" prop="empStatus">
-        <el-select v-model="formObj.empStatus" placeholder="请选择">
-          <el-option label="正常" value="01" />
-          <el-option label="锁定" value="02" />
-          <el-option label="离职" value="03" />
+        <el-select
+          v-model="formObj.empStatus"
+          clearable
+          :loading="loading"
+          placeholder="请选择">
+          <el-option
+            v-for="item in empStatusDict"
+            :key="item.DICTID"
+            :label="item.DICTNAME"
+            :value="item.DICTID"
+          />
         </el-select>
       </el-form-item>
     </el-form>
@@ -53,6 +68,7 @@
 </template>
 
 <script>
+import { getCacheDictCodeList } from '@/api/dict'
 import { addEmp, updateEmp } from '@/api/emp'
 import { getDepList } from '@/api/dep'
 export default {
@@ -73,9 +89,11 @@ export default {
         depId: '',
         depName: '',
         headShip: '',
-        empStatus: ''
+        empStatus: 'running'
       },
       deps: [],
+      headShipDict: [],
+      empStatusDict: [],
       loading: false,
       rules: {
         badge: [{ required: true, message: '工号必须填写', trigger: 'change' }],
@@ -98,7 +116,7 @@ export default {
           orgName: formObj.orgName,
           depName: '',
           headShip: '',
-          empStatus: ''
+          empStatus: 'running'
         }
         this.$nextTick(() => {
           this.$refs['formObj'].clearValidate()
@@ -109,6 +127,22 @@ export default {
         this.formObj = formObj
       }
       this.deps = []
+      this.initHeadShip()
+      this.initEmpStatus()
+    },
+    initHeadShip(){
+      this.loading = true
+      getCacheDictCodeList({typeId: 'JBOS_HEADSHIP'}).then(response => {
+        this.headShipDict = response.data.dictCodes
+        this.loading = false
+      })
+    },
+    initEmpStatus(){
+      this.loading = true
+      getCacheDictCodeList({typeId: 'JBOS_EMP_STATUS'}).then(response => {
+        this.empStatusDict = response.data.dictCodes
+        this.loading = false
+      })
     },
     onSearchDep(query) {
       if (query !== '') {

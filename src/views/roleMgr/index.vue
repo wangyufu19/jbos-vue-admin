@@ -22,13 +22,14 @@
         <el-table-column
           prop="roleCode"
           label="角色编码"
-          width="400"
+          width="300"
         />
         <el-table-column
           prop="roleName"
           label="角色名称"
+          width="300"
         />
-        <el-table-column label="操作" align="center" width="300">
+        <el-table-column label="操作" align="center" >
           <template slot-scope="{row,$index}">
             <el-button type="primary" size="mini" @click="onShowUpdate(row)"> 编辑</el-button>
             <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="onDeleteOne(row,$index)"> 删除 </el-button>

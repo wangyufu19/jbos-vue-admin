@@ -33,8 +33,9 @@
       <el-table-column
         prop="orderNo"
         label="排序"
+        width="100"
       />
-      <el-table-column label="操作" align="center" width="180">
+      <el-table-column label="操作" align="center">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="onShowUpdate(row)"> 编辑</el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="onDeleteOne(row,$index)"> 删除 </el-button>

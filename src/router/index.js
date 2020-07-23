@@ -120,8 +120,10 @@ function fnAddDynamicMenuRoutes(menuList = []) {
       funcRoute.children = fnAddDynamicMenuRoutes(menuList[i].funcList)
       funcRoute.component = Layout
     } else {
-      funcRoute.path = menuList[i].funcPath
-      funcRoute.component = loadView(menuList[i].funcUrl)
+      if (menuList[i].funcType === '1') {
+        funcRoute.path = menuList[i].funcPath
+        funcRoute.component = loadView(menuList[i].funcUrl)
+      }
     }
     funcRoutes.push(funcRoute)
   }

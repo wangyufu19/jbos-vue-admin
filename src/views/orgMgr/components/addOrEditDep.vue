@@ -9,9 +9,17 @@
         <el-input v-model="formObj.depName" />
       </el-form-item>
       <el-form-item label="部门级别" prop="depLevel">
-        <el-select v-model="formObj.depLevel" placeholder="请选择">
-          <el-option label="一级部门" value="100" />
-          <el-option label="二级部门" value="101" />
+        <el-select
+          v-model="formObj.depLevel"
+          clearable
+          :loading="loading"
+          placeholder="请选择">
+          <el-option
+            v-for="item in devLevelDict"
+            :key="item.DICTID"
+            :label="item.DICTNAME"
+            :value="item.DICTID"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="部门负责人" prop="depChargeName">
@@ -64,6 +72,7 @@
 </template>
 
 <script>
+import { getCacheDictCodeList } from '@/api/dict'
 import { addDep, updateDep } from '@/api/dep'
 import { getEmpList } from '@/api/emp'
 export default {
@@ -85,6 +94,7 @@ export default {
         depDirector: ''
       },
       emps: [],
+      devLevelDict: [],
       loading: false,
       rules: {
         depCode: [{ required: true, message: '部门编码必须填写', trigger: 'change' }],
@@ -117,6 +127,14 @@ export default {
         this.dialogFormVisible = true
         this.formObj = formObj
       }
+      this.initDepLevel()
+    },
+    initDepLevel(){
+      this.loading = true
+      getCacheDictCodeList({typeId: 'JBOS_DEP_LEVEL'}).then(response => {
+        this.devLevelDict = response.data.dictCodes
+        this.loading = false
+      })
     },
     onSearchDepEmp(query) {
       if (query !== '') {
