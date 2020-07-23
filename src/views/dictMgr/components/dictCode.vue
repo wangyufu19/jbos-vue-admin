@@ -18,7 +18,7 @@
       style="width: 100%"
     >
       <el-table-column
-        prop="dictCode"
+        prop="dictId"
         label="字典编码"
         width="200"
       />
@@ -28,7 +28,7 @@
         width="200"
       />
       <el-table-column
-        prop="orderNO"
+        prop="orderNo"
         label="排序"
       />
     </el-table>
@@ -39,19 +39,25 @@
 import { getDictCodeList } from '@/api/dict'
 export default {
   name: 'DictCode',
+  props: ['typeId'],
   data() {
     return {
       datas: [],
-      listLoading: true
+      listLoading: true,
     }
   },
   created() {
     this.getDictCodeList()
   },
+  watch: {
+    typeId(val) {
+      this.getDictCodeList()
+    }
+  },
   methods: {
     getDictCodeList() {
       this.listLoading = true
-      getDictCodeList().then(response => {
+      getDictCodeList({typeId:this.typeId}).then(response => {
         this.datas = response.data.dictCodes
         this.listLoading = false
       })

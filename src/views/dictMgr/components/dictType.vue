@@ -17,6 +17,7 @@
       fit
       highlight-current-row
       style="width: 100%"
+      @row-click="onRowClick"
     >
       <el-table-column
         prop="typeId"
@@ -69,6 +70,9 @@ export default {
         this.datas = response.data.dictTypes
         this.listLoading = false
       })
+    },
+    onRowClick(row) {
+      this.$emit('getTypeId', row.typeId)
     }
   }
 }

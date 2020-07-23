@@ -2,10 +2,10 @@
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :span="11" :xs="24">
-        <dictType />
+        <dictType @getTypeId="setTypeId"/>
       </el-col>
       <el-col :span="13" :xs="24">
-        <dictCode/>
+        <dictCode :typeId="typeId"/>
       </el-col>
     </el-row>
   </div>
@@ -21,11 +21,13 @@ export default {
   },
   data() {
     return {
-      parentId: undefined
+      typeId: undefined
     }
   },
   methods: {
-
+    setTypeId(typeId) {
+      this.typeId = typeId
+    }
   }
 }
 </script>
