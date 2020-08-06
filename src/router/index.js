@@ -4,14 +4,11 @@ import { getToken } from '@/utils/auth' // get token from cookie
 
 Vue.use(Router)
 
-
-
 import Layout from '@/layout'
 import NProgress from 'nprogress'
 import store from '@/store'
 import http from '@/utils/request'
 import { isURL } from '@/utils/validate'
-
 
 const loadView = (view) => { // 路由懒加载
   return resolve => require([`@/views/${view}`], resolve)
@@ -49,49 +46,7 @@ const globalRoutes = [
       }
       next()
     }
-  },
-  //
-  // {
-  //   path: '/sysMgr',
-  //   component: Layout,
-  //   name: 'sysMgr',
-  //   meta: { title: 'sysMgr', icon: 'sysMgr' },
-  //   children: [
-  //     {
-  //       path: 'orgMgr',
-  //       name: 'orgMgr',
-  //       component: () => import('@/views/orgMgr/index'),
-  //       meta: { title: 'orgMgr', icon: 'orgMgr' }
-  //     },
-  //     {
-  //       path: 'funcManage',
-  //       name: 'funcManage',
-  //       component: () => import('@/views/funcMgr/index'),
-  //       meta: { title: 'funcManage', icon: 'funcManage' }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/example1',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example1',
-  //   meta: { title: 'Example', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // }
+  }
 ]
 
 const router = new Router({
@@ -161,20 +116,18 @@ function fnAddDynamicMenuRoutes(menuList = []) {
       funcRoute.path = '/' + menuList[i].funcCode
       funcRoute.component = Layout
       funcRoute.children = fnAddDynamicMenuRoutes(menuList[i].funcList)
+      funcRoutes.push(funcRoute)
     } else {
-      if (menuList[i].funcType === '1') {
-        funcRoute.path = menuList[i].funcCode
-        funcRoute.component = loadView(menuList[i].funcUrl)
-      }
+      funcRoutes.push(funcRoute)
     }
-    funcRoutes.push(funcRoute)
   }
   return funcRoutes
 }
 function fnAddDynamicMenuRoute(func) {
   const route = {
-    path: '',
+    path: func.funcCode,
     name: func.funcCode,
+    component: loadView(func.funcUrl),
     meta: {
       menuId: func.id,
       title: func.funcName,
