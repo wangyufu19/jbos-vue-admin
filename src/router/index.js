@@ -24,7 +24,6 @@ const globalRoutes = [
   {
     path: '/profile',
     component: Layout,
-    redirect: '/profile/index',
     hidden: true,
     children: [
       {
@@ -50,7 +49,49 @@ const globalRoutes = [
       }
       next()
     }
-  }
+  },
+  //
+  // {
+  //   path: '/sysMgr',
+  //   component: Layout,
+  //   name: 'sysMgr',
+  //   meta: { title: 'sysMgr', icon: 'sysMgr' },
+  //   children: [
+  //     {
+  //       path: 'orgMgr',
+  //       name: 'orgMgr',
+  //       component: () => import('@/views/orgMgr/index'),
+  //       meta: { title: 'orgMgr', icon: 'orgMgr' }
+  //     },
+  //     {
+  //       path: 'funcManage',
+  //       name: 'funcManage',
+  //       component: () => import('@/views/funcMgr/index'),
+  //       meta: { title: 'funcManage', icon: 'funcManage' }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/example1',
+  //   component: Layout,
+  //   redirect: '/example/table',
+  //   name: 'Example1',
+  //   meta: { title: 'Example', icon: 'example' },
+  //   children: [
+  //     {
+  //       path: 'table',
+  //       name: 'Table',
+  //
+  //       meta: { title: 'Table', icon: 'table' }
+  //     },
+  //     {
+  //       path: 'tree',
+  //       name: 'Tree',
+  //
+  //       meta: { title: 'Tree', icon: 'tree' }
+  //     }
+  //   ]
+  // }
 ]
 
 const router = new Router({
@@ -117,11 +158,12 @@ function fnAddDynamicMenuRoutes(menuList = []) {
   for (let i = 0; i < menuList.length; i++) {
     const funcRoute = fnAddDynamicMenuRoute(menuList[i])
     if (menuList[i].funcList && menuList[i].funcList.length >= 1) {
-      funcRoute.children = fnAddDynamicMenuRoutes(menuList[i].funcList)
+      funcRoute.path = '/' + menuList[i].funcCode
       funcRoute.component = Layout
+      funcRoute.children = fnAddDynamicMenuRoutes(menuList[i].funcList)
     } else {
       if (menuList[i].funcType === '1') {
-        funcRoute.path = menuList[i].funcPath
+        funcRoute.path = menuList[i].funcCode
         funcRoute.component = loadView(menuList[i].funcUrl)
       }
     }
@@ -141,6 +183,7 @@ function fnAddDynamicMenuRoute(func) {
   }
   return route
 }
+
 export function resetRouter() {
   const newRouter = router
   router.matcher = newRouter.matcher // reset router
