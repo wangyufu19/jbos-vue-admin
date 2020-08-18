@@ -7,25 +7,25 @@ export function getRoleList(params) {
     params
   })
 }
-export function addRole(params) {
+export function addRole(data) {
   return request({
     url: '/sys/role/addRole',
     method: 'post',
-    params
+    data
   })
 }
-export function updateRole(params) {
+export function updateRole(data) {
   return request({
     url: '/sys/role/updateRole',
     method: 'post',
-    params
+    data
   })
 }
-export function deleteRole(params) {
+export function deleteRole(data) {
   return request({
     url: '/sys/role/deleteRole',
     method: 'post',
-    params
+    data
   })
 }
 

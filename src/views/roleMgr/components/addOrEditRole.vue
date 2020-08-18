@@ -54,7 +54,8 @@ export default {
         id: undefined,
         roleCode: '',
         roleName: '',
-        roleFunc: ''
+        roleFunc: '',
+        checkedIds: []
       },
       rules: {
         roleCode: [{ required: true, message: '角色编码必须填写', trigger: 'change' }],
@@ -92,6 +93,7 @@ export default {
       }
     },
     popoverHide(checkedIds, checkedData) {
+      this.formObj.checkedIds = checkedIds
 
     },
     async loadTreeData(parentId) {

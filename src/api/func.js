@@ -15,24 +15,24 @@ export function getFuncList(params) {
     params
   })
 }
-export function addFunc(params) {
+export function addFunc(data) {
   return request({
     url: '/sys/func/addFunc',
     method: 'post',
-    params
+    data
   })
 }
-export function updateFunc(params) {
+export function updateFunc(data) {
   return request({
     url: '/sys/func/updateFunc',
     method: 'post',
-    params
+    data
   })
 }
-export function deleteFunc(params) {
+export function deleteFunc(data) {
   return request({
     url: '/sys/func/deleteFunc',
     method: 'post',
-    params
+    data
   })
 }

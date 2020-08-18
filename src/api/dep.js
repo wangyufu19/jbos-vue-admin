@@ -7,26 +7,26 @@ export function getDepList(params) {
     params
   })
 }
-export function addDep(params) {
+export function addDep(data) {
   return request({
     url: '/sys/dep/addDep',
     method: 'post',
-    params
+    data
   })
 }
 
-export function updateDep(params) {
+export function updateDep(data) {
   return request({
     url: '/sys/dep/updateDep',
     method: 'post',
-    params
+    data
   })
 }
 
-export function deleteDep(params) {
+export function deleteDep(data) {
   return request({
     url: '/sys/dep/deleteDep',
     method: 'post',
-    params
+    data
   })
 }

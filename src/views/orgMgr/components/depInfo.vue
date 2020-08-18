@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input v-model="search.depCodeS" placeholder="部门编码" class="filter-item" style="width: 200px;" />
       <el-input v-model="search.depNameS" placeholder="部门名称" class="filter-item" style="width: 200px;" />
-      <el-button  size="medium" type="primary"  @click="onSearch">查询</el-button>
+      <el-button  size="medium" type="primary"   @click="onSearch">查询</el-button>
       <el-button  size="medium" type="primary"  @click="onReset">重置</el-button>
       <el-button size="medium" style="margin-left: 10px;" type="primary" @click="onShowAdd">新增</el-button>
     </div>

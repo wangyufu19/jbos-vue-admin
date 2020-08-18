@@ -7,24 +7,24 @@ export function getEmpList(params) {
     params
   })
 }
-export function addEmp(params) {
+export function addEmp(data) {
   return request({
     url: '/sys/emp/addEmp',
     method: 'post',
-    params
+    data
   })
 }
-export function updateEmp(params) {
+export function updateEmp(data) {
   return request({
     url: '/sys/emp/updateEmp',
     method: 'post',
-    params
+    data
   })
 }
-export function deleteEmp(params) {
+export function deleteEmp(data) {
   return request({
     url: '/sys/emp/deleteEmp',
     method: 'post',
-    params
+    data
   })
 }
