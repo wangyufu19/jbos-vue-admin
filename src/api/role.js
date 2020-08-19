@@ -7,6 +7,20 @@ export function getRoleList(params) {
     params
   })
 }
+export function getRoleFuncs(params) {
+  return request({
+    url: '/sys/role/getRoleFuncs',
+    method: 'get',
+    params
+  })
+}
+export function saveRoleFuncs(data) {
+  return request({
+    url: '/sys/role/saveRoleFuncs',
+    method: 'post',
+    data
+  })
+}
 export function addRole(data) {
   return request({
     url: '/sys/role/addRole',

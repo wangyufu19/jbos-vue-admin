@@ -1,6 +1,14 @@
 import request from "@/utils/request";
 
 
+export function getFuncChildrenNode(params) {
+  return request({
+    url: '/sys/func/getFuncChildrenNode',
+    method: 'get',
+    params
+  })
+}
+
 export function getFuncTree(params) {
   return request({
     url: '/sys/func/getFuncTree',

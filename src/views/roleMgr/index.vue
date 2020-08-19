@@ -33,6 +33,7 @@
           <template slot-scope="{row,$index}">
             <el-button type="primary" size="mini" @click="onShowUpdate(row)"> 编辑</el-button>
             <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="onDeleteOne(row,$index)"> 删除 </el-button>
+            <el-button type="primary" size="mini" @click="onShowSetRoleFuncs(row)"> 权限设置</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -40,6 +41,7 @@
       <pagination v-show="total>0" :total="total" :page.sync="queryPage.page" :limit.sync="queryPage.limit" @pagination="getRoleList" />
       <!--新增或编辑角色信息-->
       <add-or-edit-role v-if="addOrUpdateVisible" ref="addOrEditRole" @refreshDataList="getRoleList"/>
+      <set-role-funcs v-if="setRoleFuncVisible" ref="setRoleFuncs"/>
     </el-card>
   </div>
 </template>
@@ -48,9 +50,10 @@
 import { getRoleList, deleteRole } from '@/api/role'
 import Pagination from '@/components/Pagination'
 import AddOrEditRole from './components/addOrEditRole'
+import SetRoleFuncs from './components/setRoleFuncs'
 export default {
   name: 'RoleMgr',
-  components: { Pagination, AddOrEditRole },
+  components: { Pagination, AddOrEditRole, SetRoleFuncs},
   data() {
     return {
       search: {
@@ -63,7 +66,8 @@ export default {
         page: 1,
         limit: 20
       },
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      setRoleFuncVisible: false
     }
   },
   created() {
@@ -109,6 +113,12 @@ export default {
           type: 'success'
         })
         this.datas.splice(index, 1)
+      })
+    },
+    onShowSetRoleFuncs(row, index) {
+      this.setRoleFuncVisible = true
+      this.$nextTick(() => {
+        this.$refs['setRoleFuncs'].init(row.id)
       })
     }
   }

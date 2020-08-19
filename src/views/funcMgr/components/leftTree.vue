@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getFuncTree } from '@/api/func'
+import { getFuncChildrenNode } from '@/api/func'
 export default {
   data() {
     return {
@@ -33,8 +33,8 @@ export default {
   },
   methods: {
     async loadTreeData(parentId) {
-      await getFuncTree({ parentId: parentId }).then(response => {
-        this.items = response.data.funcTree
+      await getFuncChildrenNode({ parentId: parentId }).then(response => {
+        this.items = response.data.childrenNode
       })
     },
     async loadNode(node, resolve) {

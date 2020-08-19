@@ -18,11 +18,11 @@
         :show-checkbox="multiple"
         :node-key="nodeKey"
         :check-strictly="checkStrictly"
-        :expand-on-click-node="false"
         :default-checked-keys="defaultCheckedKeys"
         :highlight-current="true"
         @node-click="handleNodeClick"
         @check-change="handleCheckChange"
+        @node-expand="handleNodeExpand"
       />
       <el-select
         slot="reference"
@@ -80,7 +80,7 @@ export default {
     checkStrictly: {
       type: Boolean,
       default() {
-        return true
+        return false
       }
     },
     // 默认选中的节点key数组
@@ -105,6 +105,7 @@ export default {
   },
   data() {
     return {
+      defaultExpandedKeys: [],
       defaultCheckedKeys: [],
       isShowSelect: true, // 是否显示树状选择器
       options: [],
@@ -173,6 +174,10 @@ export default {
       this.selectedData = this.options.map((item) => {
         return item.label
       })
+    },
+    // 节点被展开时的回调
+    handleNodeExpand() {
+      this.$refs.tree.setChecked('3',true,false)
     },
     // 清除被选中的节点
     clearCheckData() {

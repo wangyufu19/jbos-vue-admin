@@ -13,17 +13,17 @@
           <el-option label="其它" value="101" />
         </el-select>
       </el-form-item>
-      <el-form-item label="角色功能" prop="roleFunc">
-        <tree-select
-          ref="treeselect"
-          :loadNode="loadNode"
-          :multiple="true"
-          :default-props="defaultProps"
-          :node-key="nodeKey"
-          :checked-keys="defaultCheckedKeys"
-          @popoverHide="popoverHide"
-        />
-      </el-form-item>
+<!--      <el-form-item label="角色功能" prop="roleFunc">-->
+<!--        <tree-select-->
+<!--          ref="treeselect"-->
+<!--          :loadNode="loadNode"-->
+<!--          :multiple="true"-->
+<!--          :default-props="defaultProps"-->
+<!--          :node-key="nodeKey"-->
+<!--          :checked-keys="defaultCheckedKeys"-->
+<!--          @popoverHide="popoverHide"-->
+<!--        />-->
+<!--      </el-form-item>-->
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -69,7 +69,7 @@ export default {
         isLeaf: 'leaf'
       },
       nodeKey: 'id',
-      defaultCheckedKeys: [1,3]
+      defaultCheckedKeys: []
     }
   },
   methods: {
