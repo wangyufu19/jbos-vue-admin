@@ -80,7 +80,7 @@ export default {
     checkStrictly: {
       type: Boolean,
       default() {
-        return false
+        return true
       }
     },
     // 默认选中的节点key数组
@@ -106,7 +106,7 @@ export default {
   data() {
     return {
       defaultCheckedKeys: [],
-      isShowSelect: false, // 是否显示树状选择器
+      isShowSelect: true, // 是否显示树状选择器
       options: [],
       selectedData: [], // 选中的节点
       style: 'width:' + this.width-100 + 'px;' + 'height:' + this.height + 'px;',

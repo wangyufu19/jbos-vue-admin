@@ -69,7 +69,7 @@ export default {
         isLeaf: 'leaf'
       },
       nodeKey: 'id',
-      defaultCheckedKeys: []
+      defaultCheckedKeys: [1,3]
     }
   },
   methods: {
@@ -94,7 +94,6 @@ export default {
     },
     popoverHide(checkedIds, checkedData) {
       this.formObj.checkedIds = checkedIds
-
     },
     async loadTreeData(parentId) {
       await getFuncTree({ parentId: parentId }).then(response => {
