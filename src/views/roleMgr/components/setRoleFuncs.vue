@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" :visible.sync="dialogFormVisible">
+  <el-card>
     <el-tree
       ref="tree"
       :data="items"
@@ -9,11 +9,9 @@
       :filter-node-method="filterNode"
       class="filter-tree"
     />
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button type="primary" @click="onSaveRoleFuncs()">确定 </el-button>
-    </div>
-  </el-dialog>
+
+    <el-button type="primary" size="mini" @click="onSaveRoleFuncs()">确定 </el-button>
+  </el-card>
 </template>
 
 <script>
@@ -21,11 +19,9 @@ import { getFuncTree } from '@/api/func'
 import { getRoleFuncs,saveRoleFuncs } from '@/api/role'
 export default {
   name: 'SetRoleFuncs',
+  props: ['getRoleId', 'getRoleName'],
   data() {
     return {
-      title: '角色信息-权限设置',
-      dialogFormVisible: false,
-      roleId: null,
       filterText: '',
       items: [],
       hasCheckedKeyIds: [],
@@ -35,24 +31,28 @@ export default {
       }
     }
   },
-  methods: {
-    init(roleId) {
-      this.dialogFormVisible = true
-      this.roleId = roleId
+  created() {
+    this.loadTreeData('0')
+  },
+  watch: {
+    getRoleId(val) {
       this.loadTreeData('0')
-    },
+    }
+  },
+  methods: {
+
     async loadTreeData(parentId) {
       await getFuncTree({ parentId: parentId }).then(response => {
         this.items = response.data.funcTree
       })
-      await getRoleFuncs({ roleId: this.roleId }).then(response => {
+      await getRoleFuncs({ roleId: this.getRoleId}).then(response => {
         this.hasCheckedKeyIds = response.data.roleFuncs
         this.$refs.tree.setCheckedKeys(this.hasCheckedKeyIds,false)
       })
     },
     onSaveRoleFuncs() {
       const checkedIds = this.$refs.tree.getCheckedKeys()
-      saveRoleFuncs({roleId: this.roleId,checkedIds: checkedIds}).then(response => {
+      saveRoleFuncs({roleId: this.getRoleId,checkedIds: checkedIds}).then(response => {
         this.dialogFormVisible = false
         this.$message({
           message: '操作成功',

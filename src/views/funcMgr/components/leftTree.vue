@@ -5,6 +5,7 @@
     :load="loadNode"
     :props="defaultProps"
     :filter-node-method="filterNode"
+    :highlight-current="true"
     class="filter-tree"
     lazy
     @node-click="onClickNode"

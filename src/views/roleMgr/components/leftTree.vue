@@ -14,7 +14,8 @@
 </template>
 
 <script>
-import { getOgrTree } from '@/api/org'
+import { getRoleChildrenNode } from '@/api/role'
+
 export default {
   data() {
     return {
@@ -34,8 +35,8 @@ export default {
   },
   methods: {
     async loadTreeData(parentId) {
-      await getOgrTree({ parentId: parentId }).then(response => {
-        this.items = response.data.orgTree
+      await getRoleChildrenNode({ parentId: parentId }).then(response => {
+        this.items = response.data.childrenNode
       })
     },
     async loadNode(node, resolve) {
@@ -48,7 +49,7 @@ export default {
       }
     },
     onClickNode(data, node) {
-      this.$emit('getOrg', data)
+      this.$emit('getRole', data)
     }
   }
 }

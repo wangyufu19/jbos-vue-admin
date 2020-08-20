@@ -1,132 +1,35 @@
 <template>
   <div class="app-container">
-    <el-card>
-      <div slot="header" class="clearfix">
-        <span>角色列表</span>
-      </div>
-      <div class="filter-container">
-        <el-input v-model="search.roleNameS" placeholder="角色名称" class="filter-item" style="width: 300px;" />
-        <el-button size="medium" type="primary" @click="onSearch">查询</el-button>
-        <el-button size="medium" type="primary" @click="onReset">重置</el-button>
-        <el-button size="medium" style="margin-left: 10px;" type="primary" @click="onShowAdd">新增</el-button>
-      </div>
-      <el-table
-        v-loading="listLoading"
-        :data="datas"
-        border
-        stripe
-        fit
-        highlight-current-row
-        style="width: 100%"
-      >
-        <el-table-column
-          prop="roleCode"
-          label="角色编码"
-          width="300"
-        />
-        <el-table-column
-          prop="roleName"
-          label="角色名称"
-          width="300"
-        />
-        <el-table-column label="操作" align="center" >
-          <template slot-scope="{row,$index}">
-            <el-button type="primary" size="mini" @click="onShowUpdate(row)"> 编辑</el-button>
-            <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="onDeleteOne(row,$index)"> 删除 </el-button>
-            <el-button type="primary" size="mini" @click="onShowSetRoleFuncs(row)"> 权限设置</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!--角色列表分页信息-->
-      <pagination v-show="total>0" :total="total" :page.sync="queryPage.page" :limit.sync="queryPage.limit" @pagination="getRoleList" />
-      <!--新增或编辑角色信息-->
-      <add-or-edit-role v-if="addOrUpdateVisible" ref="addOrEditRole" @refreshDataList="getRoleList"/>
-      <set-role-funcs v-if="setRoleFuncVisible" ref="setRoleFuncs"/>
-    </el-card>
+    <el-row :gutter="20">
+      <el-col :span="6" :xs="24">
+        <leftTree @getRole="setRole"/>
+      </el-col>
+      <el-col :span="18" :xs="24">
+        <treeMain :getRoleId="roleId" :getRoleName="roleName"/>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-import { getRoleList, deleteRole } from '@/api/role'
-import Pagination from '@/components/Pagination'
-import AddOrEditRole from './components/addOrEditRole'
-import SetRoleFuncs from './components/setRoleFuncs'
+import { leftTree,treeMain } from './components'
 export default {
   name: 'RoleMgr',
-  components: { Pagination, AddOrEditRole, SetRoleFuncs},
+  components: {
+    leftTree,
+    treeMain
+  },
   data() {
     return {
-      search: {
-        roleNameS: ''
-      },
-      datas: [],
-      listLoading: true,
-      total: 0,
-      queryPage: {
-        page: 1,
-        limit: 20
-      },
-      addOrUpdateVisible: false,
-      setRoleFuncVisible: false
+      roleId: undefined,
+      roleName: undefined
     }
   },
-  created() {
-    this.getRoleList()
-  },
   methods: {
-    getRoleList() {
-      this.listLoading = true
-      getRoleList(this.queryPage).then(response => {
-        this.datas = response.data.page.list
-        this.total = response.data.page.total
-        this.listLoading = false
-      })
-    },
-    onSearch() {
-      this.queryPage.page = 1
-      this.queryPage.roleNameS = this.search.roleNameS
-      this.getRoleList()
-    },
-    onReset() {
-      this.search = {
-        roleNameS: ''
-      }
-    },
-    onShowAdd() {
-      this.addOrUpdateVisible = true
-      const obj = Object()
-      this.$nextTick(() => {
-        this.$refs['addOrEditRole'].init(obj, 'create')
-      })
-    },
-    onShowUpdate(row) {
-      const roleForm = Object.assign({}, row)
-      this.addOrUpdateVisible = true
-      this.$nextTick(() => {
-        this.$refs['addOrEditRole'].init(roleForm, 'update')
-      })
-    },
-    onDeleteOne(row, index) {
-      deleteRole({ id: row.id }).then(response => {
-        this.$message({
-          message: '操作成功',
-          type: 'success'
-        })
-        this.datas.splice(index, 1)
-      })
-    },
-    onShowSetRoleFuncs(row, index) {
-      this.setRoleFuncVisible = true
-      this.$nextTick(() => {
-        this.$refs['setRoleFuncs'].init(row.id)
-      })
+    setRole(org) {
+      this.roleId = org.id
+      this.roleName = org.text
     }
   }
 }
 </script>
-
-<style scoped>
-  .filter-container{
-    margin-bottom: 10px;
-  }
-</style>

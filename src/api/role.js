@@ -1,5 +1,12 @@
 import request from "@/utils/request";
 
+export function getRoleChildrenNode(params) {
+  return request({
+    url: '/sys/role/getRoleChildrenNode',
+    method: 'get',
+    params
+  })
+}
 export function getRoleList(params) {
   return request({
     url: '/sys/role/getRoleList',
@@ -38,6 +45,29 @@ export function updateRole(data) {
 export function deleteRole(data) {
   return request({
     url: '/sys/role/deleteRole',
+    method: 'post',
+    data
+  })
+}
+
+export function getRoleEmpList(params) {
+  return request({
+    url: '/sys/role/getRoleEmpList',
+    method: 'get',
+    params
+  })
+}
+
+export function getSelectRoleEmpList(params) {
+  return request({
+    url: '/sys/role/getSelectRoleEmpList',
+    method: 'get',
+    params
+  })
+}
+export function addRoleUser(data) {
+  return request({
+    url: '/sys/role/addRoleUser',
     method: 'post',
     data
   })

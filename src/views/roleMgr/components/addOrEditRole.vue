@@ -13,17 +13,6 @@
           <el-option label="其它" value="101" />
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="角色功能" prop="roleFunc">-->
-<!--        <tree-select-->
-<!--          ref="treeselect"-->
-<!--          :loadNode="loadNode"-->
-<!--          :multiple="true"-->
-<!--          :default-props="defaultProps"-->
-<!--          :node-key="nodeKey"-->
-<!--          :checked-keys="defaultCheckedKeys"-->
-<!--          @popoverHide="popoverHide"-->
-<!--        />-->
-<!--      </el-form-item>-->
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -35,13 +24,8 @@
 <script>
 import { addRole, updateRole } from '@/api/role'
 import { getFuncTree } from '@/api/func'
-import TreeSelect from '@/components/TreeSelected'
-
 export default {
   name: 'AddOrEditRole',
-
-  components: { TreeSelect },
-
   data() {
     return {
       dialogFormVisible: false,
@@ -54,22 +38,14 @@ export default {
         id: undefined,
         roleCode: '',
         roleName: '',
-        roleFunc: '',
-        checkedIds: []
+        roleType: '100'
       },
       rules: {
         roleCode: [{ required: true, message: '角色编码必须填写', trigger: 'change' }],
         roleName: [{ required: true, message: '角色名称必须填写', trigger: 'change' }],
         roleType: [{ required: true, message: '角色类型必须填写', trigger: 'change' }]
       },
-      items: [],
-      defaultProps: {
-        label: 'text',
-        children: 'zones',
-        isLeaf: 'leaf'
-      },
-      nodeKey: 'id',
-      defaultCheckedKeys: []
+      items: []
     }
   },
   methods: {
@@ -79,10 +55,11 @@ export default {
         this.dialogFormVisible = true
         this.formObj = {
           id: undefined,
+          parentId: formObj.parentId,
           roleCode: '',
-          roleName: ''
+          roleName: '',
+          roleType: '100'
         }
-        this.$refs['treeselect'].clearCheckData()
         this.$nextTick(() => {
           this.$refs['formObj'].clearValidate()
         })
@@ -91,9 +68,6 @@ export default {
         this.dialogFormVisible = true
         this.formObj = formObj
       }
-    },
-    popoverHide(checkedIds, checkedData) {
-      this.formObj.checkedIds = checkedIds
     },
     async loadTreeData(parentId) {
       await getFuncTree({ parentId: parentId }).then(response => {
