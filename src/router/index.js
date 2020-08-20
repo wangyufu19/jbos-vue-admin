@@ -112,10 +112,10 @@ function fnAddDynamicMenuRoutes(menuList = []) {
   const funcRoutes = []
   for (let i = 0; i < menuList.length; i++) {
     const funcRoute = fnAddDynamicMenuRoute(menuList[i])
-    if (menuList[i].funcList && menuList[i].funcList.length >= 1) {
+    if (menuList[i].children && menuList[i].children.length >= 1) {
       funcRoute.path = '/' + menuList[i].funcCode
       funcRoute.component = Layout
-      funcRoute.children = fnAddDynamicMenuRoutes(menuList[i].funcList)
+      funcRoute.children = fnAddDynamicMenuRoutes(menuList[i].children)
       funcRoutes.push(funcRoute)
     } else {
       funcRoutes.push(funcRoute)
