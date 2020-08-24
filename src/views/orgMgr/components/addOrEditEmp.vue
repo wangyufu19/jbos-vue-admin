@@ -45,20 +45,6 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="员工状态" prop="empStatus">
-        <el-select
-          v-model="formObj.empStatus"
-          clearable
-          :loading="loading"
-          placeholder="请选择">
-          <el-option
-            v-for="item in empStatusDict"
-            :key="item.DICTID"
-            :label="item.DICTNAME"
-            :value="item.DICTID"
-          />
-        </el-select>
-      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>

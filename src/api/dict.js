@@ -23,3 +23,12 @@ export function getDictCodeList(params) {
     params
   })
 }
+
+export function saveDictCode(data) {
+  return request({
+    url: '/sys/dict/saveDictCode',
+    method: 'post',
+    data
+  })
+}
+
