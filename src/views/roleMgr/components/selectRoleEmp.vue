@@ -44,9 +44,8 @@
         width="160"
       />
       <el-table-column
-        prop="headShip"
+        prop="headShipName"
         label="职务"
-        width="100"
       />
     </el-table>
     <!--员工列表分页信息-->

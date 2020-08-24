@@ -28,23 +28,19 @@
       <el-table-column
         prop="orgName"
         label="所属机构"
-        width="100"
+        width="140"
       />
       <el-table-column
         prop="depName"
         label="所属部门"
-        width="100"
+        width="140"
       />
       <el-table-column
-        prop="headShip"
+        prop="headShipName"
         label="职务"
         width="100"
       />
-      <el-table-column
-        prop="empStatus"
-        label="员工状态"
-      />
-      <el-table-column label="操作" align="center" width="180">
+      <el-table-column label="操作" align="center">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="onShowUpdate(row)"> 编辑</el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="onDeleteOne(row,$index)"> 删除 </el-button>

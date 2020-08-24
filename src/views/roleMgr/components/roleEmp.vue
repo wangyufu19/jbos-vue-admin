@@ -36,7 +36,7 @@
         width="160"
       />
       <el-table-column
-        prop="headShip"
+        prop="headShipName"
         label="职务"
       />
       <el-table-column label="操作" align="center">
