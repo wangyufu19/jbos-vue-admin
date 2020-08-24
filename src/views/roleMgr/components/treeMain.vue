@@ -4,7 +4,7 @@
     <el-tab-pane  label="下级角色" name="childrenRole">
       <children-role ref="childrenRole" v-if="activeName=='childrenRole'" :getRoleId="getRoleId" :getRoleName="getRoleName"/>
     </el-tab-pane>
-    <el-tab-pane  label="权限设置" name="roleFunc">
+    <el-tab-pane  label="角色权限" name="roleFunc">
       <set-role-funcs ref="roleFunc" v-if="activeName=='roleFunc'" :getRoleId="getRoleId" :getRoleName="getRoleName"/>
     </el-tab-pane>
     <el-tab-pane label="角色分配" name="roleEmp">

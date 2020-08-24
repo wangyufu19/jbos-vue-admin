@@ -38,20 +38,14 @@ const globalRoutes = [
       name: '工作平台',
       component: () => import('@/views/dashboard/index'),
       meta: { title: '工作平台', icon: 'dashboard' }
-    }],
-    beforeEnter(to, from, next) {
-      const token = getToken()
-      if (!token || !/\S/.test(token)) {
-        next({ name: 'login' })
-      }
-      next()
-    }
+    }]
   }
 ]
 
 const router = new Router({
+  mode: 'hash',
   scrollBehavior: () => ({ y: 0 }),
-  isInitMenuRoute: false, // 是否初始化菜单
+  isInitMenu: false, // 是否初始化菜单
   routes: globalRoutes
 })
 
@@ -59,7 +53,7 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   // 添加动态(菜单)路由
   // 1. 已初始化或全局路由, 直接访问
-  if (router.options.isInitMenuRoute || fnCurrentRouteType(to, globalRoutes) === 'global') {
+  if (router.options.isInitMenu || fnCurrentRouteType(to, globalRoutes) === 'global') {
     next()
   } else {
     const token = getToken()
@@ -77,7 +71,7 @@ router.beforeEach((to, from, next) => {
             globalRoutes.push(funcRoutes[i])
           }
           router.addRoutes(globalRoutes)
-          router.options.isInitMenuRoute = true
+          router.options.isInitMenu = true
           next({ ...to, replace: true })
         } else {
           next()
