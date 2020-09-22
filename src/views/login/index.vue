@@ -41,7 +41,22 @@
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
-
+      <el-form-item prop="captcha">
+        <el-col :span="13">
+          <el-input
+            ref="captcha"
+            v-model="loginForm.captcha"
+            placeholder="验证码"
+            name="captcha"
+            type="text"
+            tabindex="3"
+            @keyup.enter.native="handleLogin"
+          />
+        </el-col>
+        <el-col :span="11">
+          <img alt="验证码不清楚，请重新刷新图片！" class="pointer" :src="loginForm.captchaSrc" @click="refreshCaptcha" style="height:50px;" align="right">
+        </el-col>
+      </el-form-item>
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
 
@@ -50,14 +65,12 @@
 </template>
 
 <script>
+import { captcha } from '@/api/captcha'
 import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      callback()
-    }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('The password can not be less than 6 digits'))
@@ -68,11 +81,14 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '111111',
+        captcha:'',
+        captchaSrc:''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{ required: true, trigger: 'blur'}],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        captcha: [{ required: true, trigger: 'blur'}]
       },
       loading: false,
       passwordType: 'password',
@@ -87,6 +103,9 @@ export default {
       immediate: true
     }
   },
+  created() {
+    this.refreshCaptcha()
+  },
   methods: {
     showPwd() {
       if (this.passwordType === 'password') {
@@ -96,6 +115,11 @@ export default {
       }
       this.$nextTick(() => {
         this.$refs.password.focus()
+      })
+    },
+    refreshCaptcha(){
+      captcha().then(response=>{
+        this.loginForm.captchaSrc='data:image/jpeg;base64,'+response.data.captchaSrc
       })
     },
     handleLogin() {
